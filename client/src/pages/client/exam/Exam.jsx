@@ -36,17 +36,17 @@ const Exam = () => {
             setQuestion(res?.data)
             setInitTime(res?.data?.time)
             setTotalQuestion(countQuestion?.data)
+            localStorage.setItem('totalQuestion', countQuestion?.data)
             const checkUser = await checkUserExit(payloadUser)
             if (checkUser?.data) {
                 toast('Bạn đã trả lời câu hỏi này', {
                     autoClose: 500
                 })
                 // localStorage.removeItem('time')
-                if (index >= totalQuestion) {
-                    navigate(`/bang-xep-hang-all/${id}`)
-                    return;
-                }
-                navigate(`/thi/${id}?index=${encrypt(Number(index) + 1)}`)
+                navigate(`/bang-xep-hang-all/${id}?index=${encrypt(index)}`)
+                return;
+
+                //   navigate(`/thi/${id}?index=${encrypt(Number(index) + 1)}`)
                 // return;
             }
             let time = localStorage.getItem('time')
@@ -130,85 +130,79 @@ const Exam = () => {
         setAnswerId(e.target.value)
     }
     const handleSubmit = async () => {
-        if (Number(index) <= 5) {
-            try {
-                if (user.role === 'admin') {
-                    localStorage.removeItem('time')
-                    if (Number(index) >= Number(totalQuestion)) {
-                        navigate(`/bang-xep-hang-all/${id}`)
-                        return;
-                    }
-                    navigate(`/bang-xep-hang/${id}?index=${encrypt(index)}&questionId=${encrypt(question?._id)}`)
-                    return
+        try {
+            if (user.role === 'admin') {
+                localStorage.removeItem('time')
+                navigate(`/bang-xep-hang-all/${id}?index=${encrypt(index)}`)
+                return;
+                //  navigate(`/bang-xep-hang/${id}?index=${encrypt(index)}&questionId=${encrypt(question?._id)}`)
+                //  return
+            }
+            let timeAnswered = initTime - time;
+            let payload = {
+                examId: id,
+                userId: user?._id,
+                answers: {
+                    question: question?._id,
+                    answer: answerId,
+                    timeAnswered
                 }
-                let timeAnswered = initTime - time;
-                let payload = {
-                    examId: id,
-                    userId: user?._id,
-                    answers: {
-                        question: question?._id,
-                        answer: answerId,
-                        timeAnswered
-                    }
-                }
+            }
 
-                await createExamUser(payload)
-                toast.success('Nộp bài thành công', {
-                    autoClose: 500
-                })
-                localStorage.removeItem('time')
-                setAnswerId('')
-                if (Number(index) >= Number(totalQuestion)) {
-                    navigate(`/bang-xep-hang-all/${id}`)
-                    return
-                }
-                navigate(`/bang-xep-hang/${id}?index=${encrypt(index)}&questionId=${encrypt(question?._id)}`)
-            } catch (error) {
-                toast.error('Đã có lỗi xảy ra', {
-                    autoClose: 1000
-                })
-                console.log(error)
-            }
-        } else {
-            try {
-                if (user.role === 'admin') {
-                    localStorage.removeItem('time')
-                    if (Number(index) >= Number(totalQuestion)) {
-                        navigate(`/bang-xep-hang-all/${id}`)
-                        return
-                    }
-                    navigate(`/thi/${id}?index=${encrypt((parseInt(index) + 1).toString())}`)
-                    return
-                }
-                let timeAnswered = initTime - time;
-                let payload = {
-                    examId: id,
-                    userId: user?._id,
-                    answers: {
-                        question: question?._id,
-                        answer: answerId,
-                        timeAnswered
-                    }
-                }
-                await createExamUser(payload)
-                toast.success('Nộp bài thành công', {
-                    autoClose: 500
-                })
-                localStorage.removeItem('time')
-                setAnswerId('')
-                if (Number(index) >= Number(totalQuestion)) {
-                    console.log(index + 1)
-                    navigate(`/bang-xep-hang-all/${id}`)
-                    return
-                }
-                navigate(`/thi/${id}?index=${encrypt((parseInt(index) + 1).toString())}`)
-            } catch (error) {
-                toast.error('Đã có lỗi xảy ra', {
-                    autoClose: 1000
-                })
-                console.log(error)
-            }
+            await createExamUser(payload)
+            toast.success('Nộp bài thành công', {
+                autoClose: 500
+            })
+            localStorage.removeItem('time')
+            setAnswerId('')
+            navigate(`/bang-xep-hang-all/${id}?index=${encrypt(index)}`)
+
+        } catch (error) {
+            toast.error('Đã có lỗi xảy ra', {
+                autoClose: 1000
+            })
+            console.log(error)
         }
+        // else {
+        //     try {
+        //         if (user.role === 'admin') {
+        //             localStorage.removeItem('time')
+        //             if (Number(index) >= Number(totalQuestion)) {
+        //                 navigate(`/bang-xep-hang-all/${id}`)
+        //                 return
+        //             }
+        //             navigate(`/thi/${id}?index=${encrypt((parseInt(index) + 1).toString())}`)
+        //             return
+        //         }
+        //         let timeAnswered = initTime - time;
+        //         let payload = {
+        //             examId: id,
+        //             userId: user?._id,
+        //             answers: {
+        //                 question: question?._id,
+        //                 answer: answerId,
+        //                 timeAnswered
+        //             }
+        //         }
+        //         await createExamUser(payload)
+        //         toast.success('Nộp bài thành công', {
+        //             autoClose: 500
+        //         })
+        //         localStorage.removeItem('time')
+        //         setAnswerId('')
+        //         if (Number(index) >= Number(totalQuestion)) {
+        //             console.log(index + 1)
+        //             navigate(`/bang-xep-hang-all/${id}`)
+        //             return
+        //         }
+        //         navigate(`/thi/${id}?index=${encrypt((parseInt(index) + 1).toString())}`)
+        //     } catch (error) {
+        //         toast.error('Đã có lỗi xảy ra', {
+        //             autoClose: 1000
+        //         })
+        //         console.log(error)
+        //     }
+        // }
     }
     return (
         <div className='exam'>

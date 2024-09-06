@@ -17,6 +17,19 @@
     }
   }
 
+  .head {
+    .cau {
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 30px;
+      color: #fff;
+      padding: 10px;
+      background: #6EB435;
+      border-radius: 3px;
+      width: fit-content;
+    }
+  }
+
   .text__content {
     display: flex;
     justify-content: center;
