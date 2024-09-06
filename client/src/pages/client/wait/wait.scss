@@ -1,0 +1,91 @@
+.wait {
+  .head__mb {
+    display: flex;
+    justify-content: center;
+    background: rgba(14, 0, 53, 1);
+    align-items: center;
+    color: #fff;
+    padding-top: 30px;
+    padding-bottom: 10px;
+
+    .text {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 20px;
+    }
+
+    .time {
+      font-size: 20px;
+      font-weight: 700;
+      padding: 0 10px;
+      border-radius: 4px;
+      background: rgba(226, 0, 0, 1);
+      margin-left: 10px;
+    }
+  }
+
+  .left.list__user {
+    background: rgba(228, 255, 240, 1);
+    padding: 20px;
+    border-radius: 20px;
+    height: 100%;
+
+    .user__box {
+      .user__avatar {
+        display: flex;
+        justify-content: center;
+
+        img {
+          width: 50%;
+        }
+      }
+
+      .user__name {
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-wrap: nowrap;
+      }
+    }
+  }
+
+  .right {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 100%;
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .text {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 30px;
+      }
+
+      .time {
+        background: rgba(226, 0, 0, 1);
+        font-size: 24px;
+        font-weight: 700;
+        padding: 0 10px;
+        border-radius: 10px;
+        color: #fff;
+      }
+    }
+
+    .thele {
+      margin-top: 20px;
+      flex: 1;
+      background: rgba(255, 236, 228, 1);
+      padding: 20px;
+      border-radius: 20px;
+      font-size: 16px;
+      line-height: 20px;
+    }
+  }
+}

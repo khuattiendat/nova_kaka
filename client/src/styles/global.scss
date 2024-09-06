@@ -1,0 +1,48 @@
+@import "./variables.scss";
+@import "./responsive.scss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+@font-face {
+  font-family: Linotte;
+  src: url('../../public/fonts/r0c0i - Linotte Regular.ttf');
+}
+
+.main {
+  font-family: Linotte, serif;
+  background-color: $main-bg;
+  color: $main-color;
+  overflow-y: hidden;
+}
+
+._container {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 70px;
+
+}
+
+.menuContainer {
+  width: 270px;
+  padding: 5px 20px;
+  border-right: 2px solid $soft-bg;
+
+  @include lg {
+    width: max-content;
+  }
+}
+
+.contentContainer {
+  padding: 5px 20px;
+  width: 100%;
+  overflow-x: hidden;
+}

@@ -1,0 +1,46 @@
+.list-exam {
+  .head__mb {
+    background: rgba(14, 0, 53, 1);
+    padding-top: 30px;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+
+    img {
+      width: 30%;
+    }
+  }
+
+  .title {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 30px;
+    padding: 20px 0;
+    display: block;
+  }
+
+  .exam-item {
+    background: rgba(228, 255, 240, 1);
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    span {
+      display: block;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    a, button {
+      background: rgba(20, 174, 92, 1);
+      color: #fff;
+      font-size: 20px;
+      font-weight: 600;
+      border: 1px solid rgba(20, 174, 92, 1);
+      outline: none;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  }
+}
