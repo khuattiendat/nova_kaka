@@ -14,7 +14,7 @@ const Exam = () => {
     const params = useParams()
     const {id} = params
     const query = new URLSearchParams(window.location.search)
-    const index = decrypt(query.get('index'))
+    const index = decrypt(query.get('index') || '')
     const [question, setQuestion] = useState({})
     const [time, setTime] = useState(localStorage.getItem('time') || 10)
     const [initTime, setInitTime] = useState(0)
@@ -36,7 +36,7 @@ const Exam = () => {
             setInitTime(res?.data?.time)
             localStorage.setItem('totalQuestion', countQuestion?.data)
             if (Number(index) > Number(countQuestion?.data)) {
-                navigate(`/bang-xep-hang-all/${id}?index=${encrypt(index)}`)
+                navigate(`/bang-xep-hang-all/${id}?index=${encrypt(countQuestion?.data)}`)
                 return;
             }
             const checkUser = await checkUserExit(payloadUser)
@@ -53,6 +53,9 @@ const Exam = () => {
                 localStorage.setItem('time', Number(res.data?.time))
             }
         } catch (error) {
+            toast('Đã có lỗi xảy ra', {
+                autoClose: 1000
+            })
             console.log(error)
         }
     }

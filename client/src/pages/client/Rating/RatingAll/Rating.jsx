@@ -5,11 +5,8 @@ import {useNavigate, useParams} from "react-router-dom";
 import './Rating.scss'
 import button from "bootstrap/js/src/button.js";
 import {decrypt, encrypt} from "../../../../utils/crypto.js";
-import {toast} from "react-toastify";
-import * as XLSX from 'xlsx';
 import Confetti from 'react-confetti';
 import {motion, AnimatePresence} from 'framer-motion';
-import {getMemberExam} from "../../../../apis/exam.js";
 
 
 const Rating = () => {
@@ -18,20 +15,11 @@ const Rating = () => {
     const params = useParams()
     const {id} = params;
     const query = new URLSearchParams(window.location.search)
-    const index = decrypt(query.get('index'))
+    const index = decrypt(query.get('index') || '1');
     const user = JSON.parse(sessionStorage.getItem('user'));
     const [rating, setRating] = useState([])
     const navigate = useNavigate();
     const totalQuestion = localStorage.getItem('totalQuestion') || 1;
-    const [listUser, setListUser] = useState([])
-    const fetchApi = async (id) => {
-        try {
-            const res = await getMemberExam(id)
-            setListUser(res.data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
     useEffect(() => {
         if (!user) {
             navigate('/')
@@ -62,42 +50,13 @@ const Rating = () => {
         setTimeout(() => {
             setShowConfetti(false)
         }, 5000)
-        if (Number(index) === Number(totalQuestion)) {
-            fetchApi(id)
-        }
     }, [])
     const handleNext = () => {
         socket.emit('next-question')
+
     }
     const handleDownloadData = () => {
-        if (listUser) {
-            const nonAdminUsers = listUser.filter(user => user.role !== 'admin');
-            let nonPhoneAndName = nonAdminUsers.map(user => {
-                return {
-                    'Tên': user.name,
-                    'Số điện thoại': user.phone,
-                };
-            })
-
-            // Create a worksheet from the filtered data
-            const worksheet = XLSX.utils.json_to_sheet(nonPhoneAndName);
-
-            // Create a new workbook and append the worksheet
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Danh sách tài khoản');
-
-            // Generate a binary string representation of the workbook
-            const excelBuffer = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
-
-            // Create a Blob from the binary string
-            const data = new Blob([excelBuffer], {type: 'application/octet-stream'});
-
-            // Create a link element and trigger a download
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(data);
-            link.download = 'Danh sách tài khoản.xlsx';
-            link.click();
-        }
+        navigate(`/quay-thuong/${id}`)
 
     }
     return (
@@ -149,8 +108,8 @@ const Rating = () => {
                                         Number(index) === Number(totalQuestion) ?
 
                                             <button onClick={handleDownloadData}
-                                                    className='btn btn-primary fs-6 px-2 px-md-4 fw-normal ms-0 ms-md-5'>
-                                                Tải xuống data
+                                                    className='btn btn-primary btn-quay'>
+                                                Quay thưởng
                                             </button> :
                                             <button onClick={handleNext}
                                                     className='btn btn-primary fs-6 px-2 px-md-4 fw-normal ms-0 ms-md-5'>
@@ -184,7 +143,7 @@ const Rating = () => {
                                                         exit={{opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        {rating.length > 0 && rating[1]?.user?.name}
+                                                        {rating?.length > 0 && rating[1]?.user?.name}
                                                     </motion.span>
                                                     <motion.div
                                                         className='number-2'
@@ -208,7 +167,7 @@ const Rating = () => {
                                                         exit={{opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        {rating.length > 0 && rating[0]?.user?.name}
+                                                        {rating?.length > 0 && rating[0]?.user?.name}
                                                     </motion.span>
                                                     <motion.div
                                                         className='number-1'
@@ -232,7 +191,7 @@ const Rating = () => {
                                                         exit={{opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        {rating.length > 0 && rating[2]?.user?.name}
+                                                        {rating?.length > 0 && rating[2]?.user?.name}
                                                     </motion.span>
                                                     <motion.div
                                                         className='number-3'
@@ -257,7 +216,7 @@ const Rating = () => {
                         <table className="table table-custom">
                             <tbody>
                             {
-                                rating.length > 0 ? (
+                                rating?.length > 0 ? (
                                     <AnimatePresence>
                                         {Number(index) === Number(totalQuestion) ? rating?.slice(3).map((item, index) => (
                                             <motion.tr
@@ -269,11 +228,11 @@ const Rating = () => {
                                                 transition={{duration: 0.5, ease: "easeInOut"}}
                                             >
                                                 <td className="text-muted">{index + 4}</td>
-                                                <td>{item.user.name}</td>
+                                                <td>{item?.user?.name}</td>
                                             </motion.tr>
-                                        )) : rating.map((item, index) => (
+                                        )) : rating?.map((item, index) => (
                                             <motion.tr
-                                                key={item.user._id}
+                                                key={item?.user?._id}
                                                 className={index === 0 ? 'first' : index === 1 ? 'second' : index === 2 ? 'third' : ''}
                                                 initial={{opacity: 0, y: -20}}
                                                 animate={{opacity: 1, y: 0}}
@@ -281,7 +240,7 @@ const Rating = () => {
                                                 transition={{duration: 0.5, ease: "easeInOut"}}
                                             >
                                                 <td className="text-muted">{index + 1}</td>
-                                                <td>{item.user.name}</td>
+                                                <td>{item?.user?.name}</td>
                                             </motion.tr>
                                         ))}
                                     </AnimatePresence>
