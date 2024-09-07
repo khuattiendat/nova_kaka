@@ -185,7 +185,7 @@ const updateMemberExam = async (examId, userId) => {
                 message: 'Bạn đã tham gia kỳ thi này rồi'
             }
         }
-        exam.members.push(userId);
+        exam.members.unshift(userId);
         await exam.save();
         return {
             data: exam,

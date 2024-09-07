@@ -1,8 +1,10 @@
 @import "../../../styles/variables";
 
 .home_client {
+  height: 100vh;
+  overflow: hidden;
   min-height: 100vh;
-  background: url("/image/Rectangle 5.png") no-repeat;
+  background: url("/image/Rectangle 5.png") no-repeat ;
   background-size: cover;
 
   .title {

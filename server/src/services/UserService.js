@@ -2,13 +2,6 @@ const UserModel = require('../models/UserModel');
 const createUser = async (data) => {
     try {
         const {name, email, phone} = data;
-        if (!email) {
-            return {
-                error: true,
-                message: 'Email is required',
-                data: null
-            }
-        }
         if (!phone) {
             return {
                 error: true,
@@ -23,7 +16,7 @@ const createUser = async (data) => {
                 data: null
             }
         }
-        const checkUser = await UserModel.findOne({email})
+        const checkUser = await UserModel.findOne({phone})
         if (checkUser) {
             const {password, ...dataUser} = checkUser._doc;
             return {

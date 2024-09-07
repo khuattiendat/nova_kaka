@@ -23,7 +23,7 @@ const HomeClient = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            if (data.name === '' || data.phone === '' || data.email === '') {
+            if (data.name === '' || data.phone === '') {
                 toast.warn('Vui lòng điền đầy đủ thông tin', {
                     autoClose: 500,
                 })

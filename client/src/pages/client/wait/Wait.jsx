@@ -7,6 +7,7 @@ import {getExamById} from "../../../apis/exam.js";
 import {toast} from "react-toastify";
 import {showAlertConfirm} from "../../../utils/showAlert.js";
 import {encrypt} from "../../../utils/crypto.js";
+import {motion, AnimatePresence} from 'framer-motion';
 
 const Wait = () => {
     const user = JSON.parse(sessionStorage.getItem('user'));
@@ -51,7 +52,7 @@ const Wait = () => {
                 examId: id,
             })
             socket.on('phong-cho', (data) => {
-                setMembers(data)
+                setMembers(data);
             })
             socket.on('exam-started', () => {
                 navigate(`/thi/${id}?index=${index}`)
@@ -125,39 +126,58 @@ const Wait = () => {
                             </div>
                         )
                     }
-                    <div className='col-md-8 col-12'>
+                    <div className='col-md-6 col-lg-8 col-12'>
                         <div className='list__user left'>
-                            <div className='row g-3'>
+                            <div className='row h-100 g-3'>
                                 {
-                                    members.length > 0 && members.map((item, index) => (
-                                        <div className='col-md-2 col-3' key={index}>
-                                            <div className='user__box'>
-                                                <div className='user__avatar'>
-                                                    <img src="/image/avt.png" alt=""/>
-                                                </div>
-                                                <div className='user__name'>{item?.name}</div>
+                                    members.length > 0 && (
+                                        <div className='row h-100 g-3'>
+                                            <AnimatePresence>
+                                                {members.slice(0, 8).map((item, index) => (
+                                                    <motion.div
+                                                        className='col-md-3 col-lg-2 col-3'
+                                                        key={item?.id || index}
+                                                        initial={{opacity: 0, scale: 0.5}}
+                                                        animate={{opacity: 1, scale: 1}}
+                                                        exit={{opacity: 0, scale: 0.5}}
+                                                        transition={{duration: 0.5}}
+                                                    >
+                                                        <div className='user__box'>
+                                                            <div className='user__avatar'>
+                                                                <img src="/image/avt.png" alt=""/>
+                                                            </div>
+                                                            <div className='user__name'>{item?.name}</div>
+                                                        </div>
+                                                    </motion.div>
+                                                ))}
+                                            </AnimatePresence>
+                                            <div className='col-12 d-flex justify-content-end'>
+                                                <span>
+                                                    {
+                                                        members.length > 8 && <b>{members.length - 8} Người khác</b>
+                                                    }
+                                                </span>
                                             </div>
                                         </div>
-                                    ))
+                                    )
                                 }
-                                <div className='col-12 '>
-                                    <span className='text-end d-block fw-bold fs-6'>
-                                        Đang có {members.length} người trong phòng chờ...
-                                    </span>
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className='col-md-4 col-12'>
+                    <div className='col-md-6 col-12 col-lg-4'>
                         <div className='right'>
                             <div className='head d-none d-md-flex'>
                                 <div className='text'>Cuộc thi sẽ bắt đầu trong</div>
                                 <div className='time'>{time.hour}:{time.minute}:{time.seconds}</div>
                             </div>
                             <div className='thele'>
-                                <div className='text'>Thể lệ</div>
+                                <div className='text fw-bold mb-2'>Thể lệ</div>
                                 <div className='content'>
-                                    <p>1. Câu hỏi sẽ được</p>
+                                    <b>B1 :</b> Đăng nhập QR code để tham gia trò chơi Đuổi hình bắt chữ và Lucky Draw
+                                    <br/>
+                                    <b>B2 :</b> Sau khi đăng nhập, câu hỏi được đưa ra sẽ bao gồm các hình ảnh và các
+                                    đáp án.
+                                    Mỗi câu hỏi chỉ có 5s để lựa chọn đáp án.
                                 </div>
                             </div>
                         </div>

@@ -54,7 +54,7 @@ const ListExam = () => {
                 </div>
             </div>
             <div className='container'>
-                <h2 className='title fs-6 text-md-center text-start'>Cuộc thi đang diễn ra</h2>
+                <h2 className='title fs-6 text-center'>Cuộc thi đang diễn ra</h2>
                 <div className='row g-3'>
                     {
                         loading ? <Loading/> :
@@ -70,7 +70,7 @@ const ListExam = () => {
                                         </div>
                                     )
                                 }
-                            ) : <div className='text-start fs-5 fw-bold'>Không có cuộc thi nào</div>
+                            ) : <div className='text-start fs-6 fw-semibold'>Không có cuộc thi nào !</div>
                     }
                 </div>
             </div>

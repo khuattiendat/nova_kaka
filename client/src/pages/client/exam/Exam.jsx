@@ -20,6 +20,12 @@ const Exam = () => {
     const [initTime, setInitTime] = useState(0)
     const [answerId, setAnswerId] = useState('')
     const [totalQuestion, setTotalQuestion] = useState(0)
+    const flowerAnimation = {
+        initial: {opacity: 0, y: 50},
+        animate: {opacity: 1, y: 0},
+        exit: {opacity: 0, y: -50},
+        transition: {duration: 0.5}
+    };
     const fetchApi = async (id, index) => {
         try {
             let payload = {
@@ -117,7 +123,7 @@ const Exam = () => {
                 toast('Hết giờ', {
                     autoClose: 1000
                 })
-                handleSubmit()
+                handleSubmit('')
             }
         }, 1000)
 
@@ -126,17 +132,15 @@ const Exam = () => {
         }
 
     }, [time, index])
-    const handleOnchange = (e) => {
-        setAnswerId(e.target.value)
-    }
-    const handleSubmit = async () => {
+    const handleSubmit = async (answerId = '') => {
         try {
             if (user.role === 'admin') {
                 localStorage.removeItem('time')
+                toast.success('Nộp bài thành công', {
+                    autoClose: 500
+                })
                 navigate(`/bang-xep-hang-all/${id}?index=${encrypt(index)}`)
                 return;
-                //  navigate(`/bang-xep-hang/${id}?index=${encrypt(index)}&questionId=${encrypt(question?._id)}`)
-                //  return
             }
             let timeAnswered = initTime - time;
             let payload = {
@@ -163,46 +167,6 @@ const Exam = () => {
             })
             console.log(error)
         }
-        // else {
-        //     try {
-        //         if (user.role === 'admin') {
-        //             localStorage.removeItem('time')
-        //             if (Number(index) >= Number(totalQuestion)) {
-        //                 navigate(`/bang-xep-hang-all/${id}`)
-        //                 return
-        //             }
-        //             navigate(`/thi/${id}?index=${encrypt((parseInt(index) + 1).toString())}`)
-        //             return
-        //         }
-        //         let timeAnswered = initTime - time;
-        //         let payload = {
-        //             examId: id,
-        //             userId: user?._id,
-        //             answers: {
-        //                 question: question?._id,
-        //                 answer: answerId,
-        //                 timeAnswered
-        //             }
-        //         }
-        //         await createExamUser(payload)
-        //         toast.success('Nộp bài thành công', {
-        //             autoClose: 500
-        //         })
-        //         localStorage.removeItem('time')
-        //         setAnswerId('')
-        //         if (Number(index) >= Number(totalQuestion)) {
-        //             console.log(index + 1)
-        //             navigate(`/bang-xep-hang-all/${id}`)
-        //             return
-        //         }
-        //         navigate(`/thi/${id}?index=${encrypt((parseInt(index) + 1).toString())}`)
-        //     } catch (error) {
-        //         toast.error('Đã có lỗi xảy ra', {
-        //             autoClose: 1000
-        //         })
-        //         console.log(error)
-        //     }
-        // }
     }
     return (
         <div className='exam'>
@@ -243,31 +207,20 @@ const Exam = () => {
                         {
                             question?.options && question?.options?.map((item, index) => {
                                 return (
-                                    <div key={index} className='col-md-6 d-flex align-items-center'>
-                                        <label className={answerId === item?._id ? 'item active' : 'item'}>
+                                    <div onClick={() => handleSubmit(item?._id)} key={index}
+                                         className='col-md-6 d-flex align-items-center'>
+                                        <label
+                                            onClick={() => setAnswerId(item?._id)}
+                                            className={answerId === item?._id ? 'item active' : 'item'}>
                                             <div className='d-flex align-items-center left'>
                                                 <div>{answer[index]}</div>
                                                 <div dangerouslySetInnerHTML={{__html: item?.option}}/>
-                                            </div>
-                                            <div>
-                                                <input type="radio" hidden onChange={handleOnchange} name='answer'
-                                                       checked={answerId === item?._id}
-                                                       value={item?._id}/>
                                             </div>
                                         </label>
                                     </div>
                                 )
                             })
                         }
-                    </div>
-                </div>
-                <div className='food mb-3'>
-                    <div className='row'>
-                        <div className='col-md-12 text-end'>
-                            <button onClick={handleSubmit}>
-                                Nộp bài
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>

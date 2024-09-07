@@ -42,6 +42,7 @@ const Login = () => {
         <section className="vh-100 bg-image"
                  style={{
                      backgroundImage: "url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp')",
+                     backgroundSize: "cover",
                  }}>
             <div className="mask d-flex align-items-center h-100 gradient-custom-3">
                 <div className="container h-100">

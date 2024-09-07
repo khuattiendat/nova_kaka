@@ -41,7 +41,7 @@ $xxl: 1400px;
 // mobile
 @media screen and (max-width: 576px) {
   .home_client {
-    background: transparent !important;
+    background-image: linear-gradient(to right, #74ebd5 0%, #9face6 100%) !important;
 
     form {
       .img {

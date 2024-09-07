@@ -205,6 +205,7 @@ const getRatingExam = async (examId) => {
             }
             return a.totalTime - b.totalTime;
         });
+        data = data.slice(0, 10);
         return {
             error: false,
             message: 'Get rating exam user successfully',
