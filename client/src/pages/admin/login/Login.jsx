@@ -7,7 +7,7 @@ import {login} from "../../../apis/user.js";
 const Login = () => {
     const navigate = useNavigate()
     const [data, setData] = useState({
-        email: '',
+        phone: '',
         password: ''
     })
     const handleChange = (e) => {
@@ -56,12 +56,12 @@ const Login = () => {
                                     <form onSubmit={handleSubmit}>
 
                                         <div className="form-outline mb-4">
-                                            <label className="form-label" htmlFor="form3Example1cg">email</label>
-                                            <input type="email" id="form3Example1cg"
+                                            <label className="form-label" htmlFor="form3Example1cg">Số điện thoại</label>
+                                            <input type="text" id="form3Example1cg"
                                                    required
-                                                   name='email'
+                                                   name='phone'
                                                    onChange={handleChange}
-                                                   value={data.email}
+                                                   value={data.phone}
                                                    className="form-control form-control-lg"/>
                                         </div>
                                         <div className="form-outline mb-4">

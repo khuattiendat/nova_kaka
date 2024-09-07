@@ -37,7 +37,7 @@ const ListExam = () => {
                 examId: id
             }
             await updateMemberExam(payload)
-            toast.success('Tham gia thành công', {
+            toast('Chúc mừng bạn đã tham gia NovaQuiz', {
                 autoClose: 500,
             })
             navigate(`/phong-cho/${id}`)
@@ -54,7 +54,13 @@ const ListExam = () => {
                 </div>
             </div>
             <div className='container'>
-                <h2 className='title fs-6 text-center'>Cuộc thi đang diễn ra</h2>
+                {
+                    listExam.length > 0 ?
+                        (<h2 className='title fs-6 text-center'>Cuộc thi đang diễn ra</h2>) :
+                        <h2 className='title fs-6 text-center'>Rất tiếc, cuộc thi đang diễn ra. Hẹn gặp bạn ở NovaQuiz
+                            sắp tới nhé !</h2>
+                }
+
                 <div className='row g-3'>
                     {
                         loading ? <Loading/> :
@@ -70,7 +76,12 @@ const ListExam = () => {
                                         </div>
                                     )
                                 }
-                            ) : <div className='text-start fs-6 fw-semibold'>Không có cuộc thi nào !</div>
+                            ) : (
+                                <div className='d-flex w-100 justify-content-center image'>
+                                    <img className='w-25' src="/image/pngegg.png" alt=""/>
+                                </div>
+
+                            )
                     }
                 </div>
             </div>

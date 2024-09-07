@@ -16,16 +16,9 @@ const Exam = () => {
     const query = new URLSearchParams(window.location.search)
     const index = decrypt(query.get('index'))
     const [question, setQuestion] = useState({})
-    const [time, setTime] = useState(localStorage.getItem('time') || 0)
+    const [time, setTime] = useState(localStorage.getItem('time') || 10)
     const [initTime, setInitTime] = useState(0)
     const [answerId, setAnswerId] = useState('')
-    const [totalQuestion, setTotalQuestion] = useState(0)
-    const flowerAnimation = {
-        initial: {opacity: 0, y: 50},
-        animate: {opacity: 1, y: 0},
-        exit: {opacity: 0, y: -50},
-        transition: {duration: 0.5}
-    };
     const fetchApi = async (id, index) => {
         try {
             let payload = {
@@ -41,19 +34,19 @@ const Exam = () => {
             }
             setQuestion(res?.data)
             setInitTime(res?.data?.time)
-            setTotalQuestion(countQuestion?.data)
             localStorage.setItem('totalQuestion', countQuestion?.data)
+            if (Number(index) > Number(countQuestion?.data)) {
+                navigate(`/bang-xep-hang-all/${id}?index=${encrypt(index)}`)
+                return;
+            }
             const checkUser = await checkUserExit(payloadUser)
             if (checkUser?.data) {
                 toast('Bạn đã trả lời câu hỏi này', {
                     autoClose: 500
                 })
-                // localStorage.removeItem('time')
+                localStorage.removeItem('time')
                 navigate(`/bang-xep-hang-all/${id}?index=${encrypt(index)}`)
                 return;
-
-                //   navigate(`/thi/${id}?index=${encrypt(Number(index) + 1)}`)
-                // return;
             }
             let time = localStorage.getItem('time')
             if (!time || isNaN(time)) {
@@ -126,17 +119,16 @@ const Exam = () => {
                 handleSubmit('')
             }
         }, 1000)
-
         return () => {
             clearInterval(countdown)
         }
 
-    }, [time, index])
+    }, [time])
     const handleSubmit = async (answerId = '') => {
         try {
             if (user.role === 'admin') {
                 localStorage.removeItem('time')
-                toast.success('Nộp bài thành công', {
+                toast.success('Đã nộp bài', {
                     autoClose: 500
                 })
                 navigate(`/bang-xep-hang-all/${id}?index=${encrypt(index)}`)
@@ -154,7 +146,7 @@ const Exam = () => {
             }
 
             await createExamUser(payload)
-            toast.success('Nộp bài thành công', {
+            toast.success('Đã nộp bài', {
                 autoClose: 500
             })
             localStorage.removeItem('time')

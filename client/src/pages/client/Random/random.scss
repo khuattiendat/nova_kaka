@@ -1,0 +1,83 @@
+.random {
+  text-align: center;
+  padding-top: 50px;
+  font-family: 'Arial', sans-serif;
+  min-height: 100vh;
+  background-color: #FFDEE9;
+  background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+  width: 100%;
+  overflow: hidden;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 20px auto;
+  width: 300px;
+  text-align: left;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+li {
+  margin: 10px 0;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 1rem;
+  color: #333;
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+}
+
+#randomUser {
+  margin-top: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  height: 30px;
+  transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* CSS for enhanced animation */
+@keyframes randomize {
+  0%, 100% {
+    transform: scale(1);
+    color: #333;
+  }
+  50% {
+    transform: scale(1.1);
+    color: #ff6347; /* Tomato color */
+  }
+}
+
+.random-animation {
+  animation: randomize 0.5s ease-in-out infinite; /* Smoother animation */
+  transform: scale(1.1); /* Scale up when animating */
+  color: #ff6347; /* Change color when animating */
+}

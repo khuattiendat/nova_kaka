@@ -6,7 +6,7 @@ const {
     getAllExam,
     createExam,
     getExamById,
-    updateExam, getQuestionByIndex, checkCountQuestion, checkCount
+    updateExam, getQuestionByIndex, checkCountQuestion, checkCount, getMemberExam
 } = require('../services/ExamService')
 const ExamController = {
     createExam: async (req, res) => {
@@ -220,6 +220,22 @@ const ExamController = {
         try {
             const {id} = req.params
             const response = await checkCount(id)
+            if (response.error) {
+                return res.status(400).json(response);
+            }
+            return res.status(200).json(response);
+        } catch (error) {
+            return res.status(500).json({
+                data: null,
+                error: true,
+                message: error.message || error
+            });
+        }
+    },
+    getMemberExam: async (req, res) => {
+        try {
+            const {id} = req.params
+            const response = await getMemberExam(id)
             if (response.error) {
                 return res.status(400).json(response);
             }

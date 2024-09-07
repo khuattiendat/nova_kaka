@@ -20,6 +20,7 @@ import YourTest from "./pages/client/YourTest/YourTest.jsx";
 import Wait from "./pages/client/wait/Wait.jsx";
 import ListExam from "./pages/client/listExam/ListExam.jsx";
 import Exam from "./pages/client/exam/Exam.jsx";
+import Random from "./pages/client/Random/Random.jsx";
 
 
 const queryClient = new QueryClient();
@@ -103,6 +104,10 @@ function App() {
                 {
                     path: '/danh-sach-cuoc-thi',
                     element: <ListExam/>
+                },
+                {
+                    path: '/quay-thuong/:id',
+                    element: <Random/>
                 },
                 {
                     path: '/phong-cho/:id',

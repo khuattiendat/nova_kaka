@@ -43,11 +43,11 @@ const createUser = async (data) => {
 }
 const loginUser = async (data) => {
     try {
-        const {email, password} = data;
-        if (!email) {
+        const {phone, password} = data;
+        if (!phone) {
             return {
                 error: true,
-                message: 'Email is required',
+                message: 'phone is required',
                 data: null
             }
         }
@@ -58,11 +58,11 @@ const loginUser = async (data) => {
                 data: null
             }
         }
-        const user = await UserModel.findOne({email, password});
+        const user = await UserModel.findOne({phone, password});
         if (!user) {
             return {
                 error: true,
-                message: 'Email hoặc mật khẩu không đúng !!!',
+                message: 'Số điện thoại hoặc mật khẩu không đúng !!!',
                 data: null
             }
         }

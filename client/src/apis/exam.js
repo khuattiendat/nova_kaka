@@ -55,3 +55,9 @@ export const checkCountQuestion = async (id) => {
     });
     return res.data;
 }
+export const getMemberExam = async (id) => {
+    const res = await axios.get(`${BASE_URL}/api/exams/get-member/${id}`, {
+        withCredentials: true,
+    });
+    return res.data;
+}

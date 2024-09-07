@@ -6,8 +6,10 @@ import './Rating.scss'
 import button from "bootstrap/js/src/button.js";
 import {decrypt, encrypt} from "../../../../utils/crypto.js";
 import {toast} from "react-toastify";
+import * as XLSX from 'xlsx';
 import Confetti from 'react-confetti';
 import {motion, AnimatePresence} from 'framer-motion';
+import {getMemberExam} from "../../../../apis/exam.js";
 
 
 const Rating = () => {
@@ -21,6 +23,15 @@ const Rating = () => {
     const [rating, setRating] = useState([])
     const navigate = useNavigate();
     const totalQuestion = localStorage.getItem('totalQuestion') || 1;
+    const [listUser, setListUser] = useState([])
+    const fetchApi = async (id) => {
+        try {
+            const res = await getMemberExam(id)
+            setListUser(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     useEffect(() => {
         if (!user) {
             navigate('/')
@@ -46,19 +57,48 @@ const Rating = () => {
         }
     }, [socket]);
     useEffect(() => {
+        localStorage.removeItem('time')
         setShowConfetti(true)
         setTimeout(() => {
             setShowConfetti(false)
         }, 5000)
+        if (Number(index) === Number(totalQuestion)) {
+            fetchApi(id)
+        }
     }, [])
     const handleNext = () => {
-        if (Number(index) === Number(totalQuestion)) {
-            toast.warn('Đây là câu cuối cùng', {
-                autoClose: 1000
-            })
-            return;
-        }
         socket.emit('next-question')
+    }
+    const handleDownloadData = () => {
+        if (listUser) {
+            const nonAdminUsers = listUser.filter(user => user.role !== 'admin');
+            let nonPhoneAndName = nonAdminUsers.map(user => {
+                return {
+                    'Tên': user.name,
+                    'Số điện thoại': user.phone,
+                };
+            })
+
+            // Create a worksheet from the filtered data
+            const worksheet = XLSX.utils.json_to_sheet(nonPhoneAndName);
+
+            // Create a new workbook and append the worksheet
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Danh sách tài khoản');
+
+            // Generate a binary string representation of the workbook
+            const excelBuffer = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
+
+            // Create a Blob from the binary string
+            const data = new Blob([excelBuffer], {type: 'application/octet-stream'});
+
+            // Create a link element and trigger a download
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(data);
+            link.download = 'Danh sách tài khoản.xlsx';
+            link.click();
+        }
+
     }
     return (
         <div className='rating__all'>
@@ -96,7 +136,7 @@ const Rating = () => {
                 <div className='row'>
                     <div className='col-6'>
                         <div className='left align-items-center d-md-flex justify-content-center'>
-                            <div className='cau'>
+                            <div className={Number(index) === Number(totalQuestion) ? 'd-none' : 'cau'}>
                                 Câu {index}
                             </div>
                         </div>
@@ -105,10 +145,18 @@ const Rating = () => {
                         {
                             user && user.role === 'admin' && (
                                 <>
-                                    <button onClick={handleNext}
-                                            className='btn btn-primary fs-6 px-2 px-md-4 fw-normal ms-0 ms-md-5'>Câu
-                                        tiếp theo
-                                    </button>
+                                    {
+                                        Number(index) === Number(totalQuestion) ?
+
+                                            <button onClick={handleDownloadData}
+                                                    className='btn btn-primary fs-6 px-2 px-md-4 fw-normal ms-0 ms-md-5'>
+                                                Tải xuống data
+                                            </button> :
+                                            <button onClick={handleNext}
+                                                    className='btn btn-primary fs-6 px-2 px-md-4 fw-normal ms-0 ms-md-5'>
+                                                Câu tiếp theo
+                                            </button>
+                                    }
                                 </>
 
                             )

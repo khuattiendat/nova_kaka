@@ -25,6 +25,7 @@
       border-radius: 4px;
       background: rgba(226, 0, 0, 1);
       margin-left: 10px;
+      min-width: 70px;
     }
   }
 
@@ -84,13 +85,40 @@
     }
 
     .thele {
-      margin-top: 20px;
-      flex: 1;
-      background: rgba(255, 236, 228, 1);
+      border-radius: 15px;
       padding: 20px;
-      border-radius: 20px;
-      font-size: 16px;
-      line-height: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin-top: 20px;
+      background: rgba(255, 236, 228, 1);
+
+      .title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+        background: linear-gradient(90deg, #ff8a00, #e52e71);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .content {
+        text-align: left;
+
+        span {
+          display: block;
+          font-size: 16px;
+          color: #333;
+          line-height: 1.6;
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        color: #007bff;
+        margin-top: 20px;
+      }
     }
   }
 }

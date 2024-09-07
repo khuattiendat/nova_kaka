@@ -84,10 +84,13 @@ const Wait = () => {
                     let hour = Math.floor((remainingTimeInSeconds % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
                     let minute = Math.floor((remainingTimeInSeconds % (60 * 60 * 1000)) / (60 * 1000));
                     let seconds = Math.floor((remainingTimeInSeconds % (60 * 1000)) / 1000);
+                    let formattedHour = String(hour).padStart(2, '0');
+                    let formattedMinute = String(minute).padStart(2, '0');
+                    let formattedSeconds = String(seconds).padStart(2, '0');
                     setTime({
-                        hour: hour,
-                        minute: minute,
-                        seconds: seconds
+                        hour: formattedHour,
+                        minute: formattedMinute,
+                        seconds: formattedSeconds
                     })
 
                 }
@@ -171,14 +174,19 @@ const Wait = () => {
                                 <div className='time'>{time.hour}:{time.minute}:{time.seconds}</div>
                             </div>
                             <div className='thele'>
-                                <div className='text fw-bold mb-2'>Thể lệ</div>
+                                <div className='title'>Chúc mừng bạn đã tham gia NovaQuiz</div>
                                 <div className='content'>
-                                    <b>B1 :</b> Đăng nhập QR code để tham gia trò chơi Đuổi hình bắt chữ và Lucky Draw
-                                    <br/>
-                                    <b>B2 :</b> Sau khi đăng nhập, câu hỏi được đưa ra sẽ bao gồm các hình ảnh và các
-                                    đáp án.
-                                    Mỗi câu hỏi chỉ có 5s để lựa chọn đáp án.
+                                    <span>
+                                        - Bạn sẽ tham gia trả lời 10 câu hỏi, bạn hãy lựa chọn 1 đáp án đúng nhất trong thời
+                                    gian 10 giây.
+                                    </span>
+                                    <span>
+                                       - Bạn sẽ chiến thắng khi là người trả lời đúng và nhanh nhất
+                                    </span>
                                 </div>
+                                <h3 className='mt-3 text-center'>
+                                    Chúc bạn may mắn 🏆
+                                </h3>
                             </div>
                         </div>
                     </div>

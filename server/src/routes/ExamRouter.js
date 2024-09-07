@@ -13,5 +13,6 @@ router.put('/update/:id', ExamController.updateExam);// oke
 router.delete('/delete/:id', ExamController.deleteExam);// oke
 router.post('/get-question', ExamController.getQuestionByIndex);// oke
 router.get('/check-count/:id', ExamController.checkCountQuestion);// oke
+router.get('/get-member/:id', ExamController.getMemberExam);// oke
 
 module.exports = router;

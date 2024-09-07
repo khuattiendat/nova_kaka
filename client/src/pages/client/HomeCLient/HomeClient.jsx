@@ -68,17 +68,8 @@ const HomeClient = () => {
                                            onChange={handleChange}
                                            id="exampleInputPassword1"/>
                                 </div>
-                                <div className="mb-3">
-                                    <label htmlFor="exampleInputPassword2" className="form-label">Email</label>
-                                    <input type="email" className="form-control" id="exampleInputPassword2"
-                                           name='email'
-                                           value={data.email}
-                                           onChange={handleChange}
-                                    />
-                                </div>
-                                <button type="submit" className="btn btn-success w-100">Submit</button>
+                                <button type="submit" className="btn btn-success w-100">Bắt đầu</button>
                             </div>
-
                         </form>
                     </div>
                 </div>

@@ -40,6 +40,13 @@ $xxl: 1400px;
 
 // mobile
 @media screen and (max-width: 576px) {
+  .list-exam {
+    .image {
+      img {
+        width: 80% !important;
+      }
+    }
+  }
   .home_client {
     background-image: linear-gradient(to right, #74ebd5 0%, #9face6 100%) !important;
 
