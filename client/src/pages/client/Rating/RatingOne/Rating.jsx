@@ -45,11 +45,12 @@ const Rating = () => {
                     index: correctAnswerIndex
                 });
             })
-            socket.on('total-question', (data) => {
-                setTotalQuestion(data)
-            })
-            socket.on('next-question', () => {
-                navigate(`/thi/${id}?index=${encrypt((parseInt(index) + 1).toString())}`)
+            socket.on('next-question', (data) => {
+                console.log(data)
+                const {index} = data
+                if (index) {
+                    navigate(`/thi/${id}?index=${encrypt((parseInt(index) + 1).toString())}`)
+                }
             })
             socket.on('view-answer', (data) => {
                 setViewAnswer(data.view)
@@ -57,7 +58,10 @@ const Rating = () => {
         }
     }, [socket])
     const handleNext = () => {
-        socket.emit('next-question')
+        console.log('next')
+        // socket.emit('next-question', {
+        //     index: index
+        // })
     }
     const handleViewAnswer = () => {
         socket.emit('view-answer', {
@@ -86,7 +90,7 @@ const Rating = () => {
                         </div>
                         <div className='col-md-6 d-flex justify-content-end justify-content-center'>
                             {
-                                (user && user.role === 'admin' && Number(index) <= 5) && (
+                                (user && user.role === 'admin' && (
                                     <>
                                         <button className='btn btn-success fs-6 px-2 px-md-4 fw-normal'
                                                 onClick={handleViewAnswer}>Xem đáp án
@@ -97,7 +101,7 @@ const Rating = () => {
                                         </button>
                                     </>
 
-                                )
+                                ))
                             }
                         </div>
                     </div>

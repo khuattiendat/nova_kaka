@@ -20,8 +20,6 @@ const Rating = () => {
     const [rating, setRating] = useState([])
     const navigate = useNavigate();
     const totalQuestion = localStorage.getItem('totalQuestion') || 1;
-    const [currentIndex, setCurrentIndex] = useState(index)
-    console.log(index)
     useEffect(() => {
         if (!user) {
             navigate('/')
@@ -35,17 +33,15 @@ const Rating = () => {
     useEffect(() => {
         if (socket) {
             socket.emit('rating', {
-                examId: id,
-                index
+                examId: id
             })
             socket.on('rating', (data) => {
                 console.log(data)
                 setRating(data?.rating)
-                setCurrentIndex(data?.index)
             })
-            socket.on('next-question', () => {
-                console.log(currentIndex)
-                let _index = Number(currentIndex) + 1
+            socket.on('next-question', (data) => {
+                const {index} = data
+                let _index = Number(index) + 1
                 navigate(`/thi/${id}?index=${encrypt(_index.toString())}`)
             })
         }
@@ -59,7 +55,9 @@ const Rating = () => {
     }, [])
     const handleNext = () => {
         if (socket) {
-            socket.emit('next-question')
+            socket.emit('next-question', {
+                index: index
+            })
         }
     }
     const handleDownloadData = () => {

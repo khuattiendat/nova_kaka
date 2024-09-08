@@ -89,8 +89,11 @@ try {
             const countQuestion = await checkCountQuestion()
             io.emit('total-question', countQuestion.data)
         })
-        socket.on('next-question', () => {
-            io.emit('next-question')
+        socket.on('next-question', (data) => {
+            const {index} = data
+            io.emit('next-question', {
+                index: index
+            })
         })
         socket.on('view-answer', (data) => {
             io.emit('view-answer', {
@@ -99,11 +102,10 @@ try {
         })
         // rating all
         socket.on('rating', async (data) => {
-            const {examId, index} = data
+            const {examId} = data
             const rating = await getRatingExam(examId)
             io.emit('rating', {
                 rating: rating.data,
-                index
             })
         })
         //disconnect

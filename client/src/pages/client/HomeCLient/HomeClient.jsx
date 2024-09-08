@@ -4,6 +4,7 @@ import {toast} from "react-toastify";
 import {createUser} from "../../../apis/user.js";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
+import Loading from "../../../components/loading/loadingText/Loading.jsx";
 
 
 const HomeClient = () => {
@@ -73,7 +74,7 @@ const HomeClient = () => {
                                            id="exampleInputPassword1"/>
                                 </div>
                                 <button type="submit" className="btn btn-success w-100">
-                                    {loading ? 'Loading...' : 'Bắt đầu'}
+                                    {loading ? <Loading/> : 'Bắt đầu'}
                                 </button>
                             </div>
                         </form>

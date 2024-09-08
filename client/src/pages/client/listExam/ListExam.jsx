@@ -4,13 +4,15 @@ import './listExam.scss'
 import {useEffect, useState} from "react";
 import {getExamComing, updateMemberExam} from "../../../apis/exam.js";
 import {toast} from "react-toastify";
-import Loading from "../../../components/loading/loadingText/Loading.jsx";
+import LoadingText from "../../../components/loading/loadingText/Loading.jsx";
+import LoadingPage from "../../../components/loading/loadingSpin/Loading.jsx";
 
 const ListExam = () => {
     const navigate = useNavigate();
     const [listExam, setListExam] = useState([]);
     const user = JSON.parse(sessionStorage.getItem('user'));
     const [loading, setLoading] = useState(false)
+    const [loadingJoin, setLoadingJoin] = useState(false)
     const fetchApi = async () => {
         try {
             setLoading(true)
@@ -32,6 +34,7 @@ const ListExam = () => {
     }, [])
     const handleClick = async (id) => {
         try {
+            setLoadingJoin(true)
             let payload = {
                 userId: user._id,
                 examId: id
@@ -41,12 +44,19 @@ const ListExam = () => {
                 autoClose: 500,
             })
             navigate(`/phong-cho/${id}`)
+            setLoadingJoin(false)
         } catch (e) {
+            setLoadingJoin(false)
             console.log(e)
         }
     }
     return (
         <div className='list-exam'>
+            {
+                loadingJoin && <div className='loading'>
+                    <LoadingPage/>
+                </div>
+            }
             <Header/>
             <div className='d-block d-sm-none'>
                 <div className='head__mb'>
@@ -60,10 +70,9 @@ const ListExam = () => {
                         <h2 className='title fs-6 text-center'>Rất tiếc, cuộc thi đang diễn ra. Hẹn gặp bạn ở NovaQuiz
                             sắp tới nhé !</h2>
                 }
-
                 <div className='row g-3'>
                     {
-                        loading ? <Loading/> :
+                        loading ? <LoadingText/> :
                             listExam.length > 0 ? listExam.map((item, index) => {
                                     return (
                                         <div className='col-md-6 col-12 ' key={index}>

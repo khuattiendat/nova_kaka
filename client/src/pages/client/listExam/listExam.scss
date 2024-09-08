@@ -2,6 +2,15 @@
   min-height: 100vh;
   background-color: #FFDEE9;
   background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+  .loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+  }
 
   .head__mb {
     background: rgba(14, 0, 53, 1);
