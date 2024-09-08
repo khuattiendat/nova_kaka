@@ -2,14 +2,16 @@ import React, {useEffect, useState} from "react";
 import './random.scss'
 import ModalRandom from "../../../components/modal/ModalRandom/ModalRandom.jsx";
 import Confetti from 'react-confetti';
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {getMemberExam} from "../../../apis/exam.js";
+import {toast} from "react-toastify";
 
 function Random() {
+    const user = JSON.parse(sessionStorage.getItem('user'));
     const [listUser, setListUser] = useState([]);
+    const navigate = useNavigate();
     const params = useParams();
     const {id} = params;
-    // const [users] = useState(["0383878902", "0565185082", "0921928304", "012345678", " 092938383"]);
     const [randomUser, setRandomUser] = useState({
         phone: '',
         name: ''
@@ -24,17 +26,30 @@ function Random() {
             const res = await getMemberExam(id);
             setListUser(res.data);
         } catch (err) {
+            toast.error('Đã có lỗi xảy ra', {
+                autoClose: 1000,
+            });
             console.log(err);
         }
     }
     useEffect(() => {
+        if (!user || user.role !== 'admin') {
+            navigate('/')
+        }
         fetchApi();
     }, []);
     // Hàm để chọn ngẫu nhiên một user với hiệu ứng đẹp hơn
     const pickRandomUser = () => {
-        const users = listUser.map(user => {
-            return {name: user.name, phone: user.phone}
-        });
+        if (listUser.length <= 1) {
+            toast.error('Chưa có người tham gia', {
+                autoClose: 1000,
+            });
+            return;
+        }
+        const users = listUser.filter(user => user.role !== 'admin')
+            .map(user => {
+                return {name: user.name, phone: user.phone}
+            });
         if (isAnimating) return; // Ngăn không cho chạy animation nhiều lần cùng lúc
 
         setIsAnimating(true);
@@ -71,7 +86,7 @@ function Random() {
                 <button onClick={pickRandomUser} className='btn btn-success fw-semibold fs-5 mt-3'
                         disabled={isAnimating}>Chọn ngẫu nhiên
                 </button>
-                <div className="result">{randomUser.phone}</div>
+                <div className="result">{randomUser?.phone}</div>
             </div>
             {showConfetti && (
                 <Confetti

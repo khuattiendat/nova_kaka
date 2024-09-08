@@ -9,7 +9,7 @@ import {createAxios} from "../../../utils/createInstance.js";
 import {getAllUser} from "../../../apis/user.js";
 import {getAllQuestion} from "../../../apis/question.js";
 import {getAllExam} from "../../../apis/exam.js";
-import {ToastContainer} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
 
 const List = ({type}) => {
     const user = JSON.parse(sessionStorage.getItem('user'));
@@ -61,7 +61,10 @@ const List = ({type}) => {
         }
     }
     useEffect(() => {
-        if (!user) {
+        if (!user || user.role !== 'admin') {
+            toast.error('Bạn không có quyền truy cập', {
+                autoClose: 1000,
+            })
             navigate('/admin/login')
         }
         fetchData();

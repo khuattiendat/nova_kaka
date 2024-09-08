@@ -14,6 +14,7 @@ const HomeClient = () => {
     });
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
     const handleChange = (e) => {
         setData({
             ...data,
@@ -23,6 +24,7 @@ const HomeClient = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            setLoading(true);
             if (data.name === '' || data.phone === '') {
                 toast.warn('Vui lòng điền đầy đủ thông tin', {
                     autoClose: 500,
@@ -32,7 +34,9 @@ const HomeClient = () => {
             const res = await createUser(data);
             navigate('/danh-sach-cuoc-thi')
             sessionStorage.setItem('user', JSON.stringify(res.data))
+            setLoading(false);
         } catch (e) {
+            setLoading(false);
             console.log(e)
             toast.error('Đã có lỗi xảy ra', {
                 autoClose: 500,
@@ -68,7 +72,9 @@ const HomeClient = () => {
                                            onChange={handleChange}
                                            id="exampleInputPassword1"/>
                                 </div>
-                                <button type="submit" className="btn btn-success w-100">Bắt đầu</button>
+                                <button type="submit" className="btn btn-success w-100">
+                                    {loading ? 'Loading...' : 'Bắt đầu'}
+                                </button>
                             </div>
                         </form>
                     </div>

@@ -99,9 +99,12 @@ try {
         })
         // rating all
         socket.on('rating', async (data) => {
-            const {examId} = data
+            const {examId, index} = data
             const rating = await getRatingExam(examId)
-            io.emit('rating', rating.data)
+            io.emit('rating', {
+                rating: rating.data,
+                index
+            })
         })
         //disconnect
         socket.on('disconnect', () => {

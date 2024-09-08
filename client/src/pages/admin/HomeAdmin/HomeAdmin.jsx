@@ -25,12 +25,9 @@ const HomeAdmin = () => {
             toast.error('Bạn không có quyền truy cập', {
                 autoClose: 1000,
             })
-            console.log('user', user)
             navigate('/admin/login')
         }
     }, [])
-
-
     return (
         <div className="home">
             <h1 className='text-center w-100 mt-3 fw-semibold'>Trang chủ</h1>

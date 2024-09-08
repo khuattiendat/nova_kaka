@@ -15,11 +15,13 @@ const Rating = () => {
     const params = useParams()
     const {id} = params;
     const query = new URLSearchParams(window.location.search)
-    const index = decrypt(query.get('index') || '1');
+    const index = decrypt(query.get('index'));
     const user = JSON.parse(sessionStorage.getItem('user'));
     const [rating, setRating] = useState([])
     const navigate = useNavigate();
     const totalQuestion = localStorage.getItem('totalQuestion') || 1;
+    const [currentIndex, setCurrentIndex] = useState(index)
+    console.log(index)
     useEffect(() => {
         if (!user) {
             navigate('/')
@@ -34,13 +36,17 @@ const Rating = () => {
         if (socket) {
             socket.emit('rating', {
                 examId: id,
+                index
             })
             socket.on('rating', (data) => {
                 console.log(data)
-                setRating(data)
+                setRating(data?.rating)
+                setCurrentIndex(data?.index)
             })
             socket.on('next-question', () => {
-                navigate(`/thi/${id}?index=${encrypt((parseInt(index) + 1).toString())}`)
+                console.log(currentIndex)
+                let _index = Number(currentIndex) + 1
+                navigate(`/thi/${id}?index=${encrypt(_index.toString())}`)
             })
         }
     }, [socket]);
@@ -52,12 +58,12 @@ const Rating = () => {
         }, 5000)
     }, [])
     const handleNext = () => {
-        socket.emit('next-question')
-
+        if (socket) {
+            socket.emit('next-question')
+        }
     }
     const handleDownloadData = () => {
         navigate(`/quay-thuong/${id}`)
-
     }
     return (
         <div className='rating__all'>
@@ -123,7 +129,7 @@ const Rating = () => {
                     </div>
                 </div>
             </div>
-            <div className='container'>
+            <div className='container mt-5'>
                 <div className='body'>
                     {
                         Number(index) === Number(totalQuestion) && (
@@ -143,7 +149,8 @@ const Rating = () => {
                                                         exit={{opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        {rating?.length > 0 && rating[1]?.user?.name}
+                                                        {/*{rating?.length > 0 && rating[1]?.user?.name}*/}
+                                                        <img src="/image/pngegg_2.png" alt=""/>
                                                     </motion.span>
                                                     <motion.div
                                                         className='number-2'
@@ -152,7 +159,9 @@ const Rating = () => {
                                                         exit={{height: 0, opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        2
+                                                        <span>
+                                                        {rating?.length > 0 && rating[1]?.user?.name}
+                                                        </span>
                                                     </motion.div>
                                                 </motion.div>
                                             </div>
@@ -167,7 +176,8 @@ const Rating = () => {
                                                         exit={{opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        {rating?.length > 0 && rating[0]?.user?.name}
+                                                        {/*{rating?.length > 0 && rating[0]?.user?.name}*/}
+                                                        <img src="/image/pngegg_1.png" alt=""/>
                                                     </motion.span>
                                                     <motion.div
                                                         className='number-1'
@@ -176,7 +186,9 @@ const Rating = () => {
                                                         exit={{height: 0, opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        1
+                                                        <span>
+                                                        {rating?.length > 0 && rating[0]?.user?.name}
+                                                        </span>
                                                     </motion.div>
                                                 </motion.div>
                                             </div>
@@ -191,7 +203,8 @@ const Rating = () => {
                                                         exit={{opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        {rating?.length > 0 && rating[2]?.user?.name}
+                                                        {/*{rating?.length > 0 && rating[2]?.user?.name}*/}
+                                                        <img src="/image/pngegg_3.png" alt=""/>
                                                     </motion.span>
                                                     <motion.div
                                                         className='number-3'
@@ -200,7 +213,9 @@ const Rating = () => {
                                                         exit={{height: 0, opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        3
+                                                        <span>
+                                                              {rating?.length > 0 && rating[2]?.user?.name}
+                                                        </span>
                                                     </motion.div>
                                                 </motion.div>
                                             </div>
