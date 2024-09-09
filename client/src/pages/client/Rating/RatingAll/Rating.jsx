@@ -147,7 +147,6 @@ const Rating = () => {
                                                         exit={{opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        {/*{rating?.length > 0 && rating[1]?.user?.name}*/}
                                                         <img src="/image/pngegg_2.png" alt=""/>
                                                     </motion.span>
                                                     <motion.div
@@ -158,7 +157,9 @@ const Rating = () => {
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
                                                         <span>
-                                                        {rating?.length > 0 && rating[1]?.user?.name}
+                                                              {rating?.length > 0 && rating[1]?.user?.name}
+                                                            <span
+                                                                className='d-block'>{rating?.length > 0 && rating[1]?.totalScore}</span>
                                                         </span>
                                                     </motion.div>
                                                 </motion.div>
@@ -174,7 +175,6 @@ const Rating = () => {
                                                         exit={{opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        {/*{rating?.length > 0 && rating[0]?.user?.name}*/}
                                                         <img src="/image/pngegg_1.png" alt=""/>
                                                     </motion.span>
                                                     <motion.div
@@ -185,7 +185,9 @@ const Rating = () => {
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
                                                         <span>
-                                                        {rating?.length > 0 && rating[0]?.user?.name}
+                                                              {rating?.length > 0 && rating[0]?.user?.name}
+                                                            <span
+                                                                className='d-block'>{rating?.length > 0 && rating[0]?.totalScore}</span>
                                                         </span>
                                                     </motion.div>
                                                 </motion.div>
@@ -201,8 +203,8 @@ const Rating = () => {
                                                         exit={{opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        {/*{rating?.length > 0 && rating[2]?.user?.name}*/}
                                                         <img src="/image/pngegg_3.png" alt=""/>
+
                                                     </motion.span>
                                                     <motion.div
                                                         className='number-3'
@@ -213,6 +215,8 @@ const Rating = () => {
                                                     >
                                                         <span>
                                                               {rating?.length > 0 && rating[2]?.user?.name}
+                                                            <span
+                                                                className='d-block'>{rating?.length > 0 && rating[2]?.totalScore}</span>
                                                         </span>
                                                     </motion.div>
                                                 </motion.div>
@@ -253,7 +257,8 @@ const Rating = () => {
                                                 transition={{duration: 0.5, ease: "easeInOut"}}
                                             >
                                                 <td className="text-muted">{index + 1}</td>
-                                                <td>{item?.user?.name}</td>
+                                                <td>{item?.user?.name} - Điểm: {item?.totalScore}
+                                                </td>
                                             </motion.tr>
                                         ))}
                                     </AnimatePresence>

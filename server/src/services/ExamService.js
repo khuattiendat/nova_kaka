@@ -19,7 +19,6 @@ const createExam = async (examData) => {
             }
         }
         const questions = await getQuestionLimit(numberOfQuestions);
-        console.log(questions)
         const exam = new ExamModel({
             title,
             date,

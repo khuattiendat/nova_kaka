@@ -15,6 +15,7 @@ const Wait = () => {
     const [members, setMembers] = useState([])
     const [socket, setSocket] = useState(null)
     const [exam, setExam] = useState({})
+    const [startCountdown, setStartCountdown] = useState(false)
     const [time, setTime] = useState({
         hour: 0,
         minute: 0,
@@ -25,9 +26,12 @@ const Wait = () => {
     const navigate = useNavigate();
     const fetchApi = async () => {
         try {
+            setStartCountdown(false)
             const res = await getExamById(id);
             setExam(res.data)
+            setStartCountdown(true);
         } catch (e) {
+            setStartCountdown(false)
             console.log(e)
             toast.error(e?.response?.data?.message, {
                 autoClose: 1000
@@ -60,9 +64,10 @@ const Wait = () => {
         }
     }, [socket])
     useEffect(() => {
-        localStorage.removeItem('time')
         fetchApi()
-        if (exam.startTime) {
+    }, []);
+    useEffect(() => {
+        if (startCountdown) {
             const [startHour, startMinute] = exam.startTime.split(':');
             const examStartDate = new Date();
             examStartDate.setHours(startHour, startMinute, 0);
@@ -72,13 +77,13 @@ const Wait = () => {
                 // Calculate the remaining time in seconds
                 let currentTime = new Date();
                 let remainingTimeInSeconds = (examStartDate.getTime() - currentTime.getTime());
-
                 // Check if the exam has started
                 if (remainingTimeInSeconds <= 0) {
                     clearInterval(countdown);
-                    toast.warn('Cuộc thi sẽ sớm được bắt đầu', {
+                    toast.warn('Cuộc thi đã bắt đầu', {
                         autoClose: 1000,
                     })
+                    navigate(`/thi/${id}?index=${index}`)
                 } else {
                     // Convert the remaining time to hours, minutes, and seconds
                     let hour = Math.floor((remainingTimeInSeconds % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
@@ -99,8 +104,7 @@ const Wait = () => {
             // Clean up the countdown timer when the component unmounts
             return () => clearInterval(countdown);
         }
-
-    }, [exam.startTime]);
+    }, [startCountdown])
     const handleStart = async () => {
         let confirm = await showAlertConfirm('Bạn có chắc chắn muốn bắt đầu cuộc thi?')
         if (confirm) {

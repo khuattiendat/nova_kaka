@@ -23,6 +23,10 @@ const ExamUserSchema = new mongoose.Schema({
             timeAnswered: { // thời gian làm bài (s)
                 type: Number,
                 default: 0
+            },
+            score: {
+                type: Number,
+                default: 0
             }
         }],
     score: {

@@ -32,22 +32,6 @@ try {
             const {examId} = data
             const members = await getMemberExam(examId)
             io.emit('phong-cho', members.data)
-            const exam = await getExamById(examId)
-            const [startHour, startMinute] = exam?.data?.startTime.split(':');
-            const examStartDate = new Date();
-            examStartDate.setHours(startHour, startMinute, 0);
-            // Start the countdown timer
-            const countdown = setInterval(() => {
-                // Get the current time
-                // Calculate the remaining time in seconds
-                let currentTime = new Date();
-                let remainingTimeInSeconds = (examStartDate.getTime() - currentTime.getTime());
-                // Check if the exam has started
-                if (remainingTimeInSeconds <= 0) {
-                    clearInterval(countdown);
-                    io.emit('exam-started');
-                }
-            }, 1000);
         })
         socket.on('update-start-time', (data) => {
             const {examId} = data;
@@ -57,30 +41,30 @@ try {
             io.emit('exam-started')
         })
         // exam
-        socket.on('exam', async (data) => {
-            try {
-                const {id, index, userId} = data
-                console.log(data)
-                const question = await getQuestionByIndex(id, index)
-                const countQuestion = await checkCountQuestion()
-                const checkUser = await checkExamUserExit(userId, id, question?.data._id)
-                if (checkUser.data) {
-                    io.emit('exam', {
-                        userExit: true,
-                        question: question.data,
-                        totalQuestion: countQuestion.data
-                    })
-                    return;
-                }
-
-                io.emit('exam', {
-                    question: question.data,
-                    totalQuestion: countQuestion.data
-                })
-            } catch (e) {
-                console.log(e)
-            }
-        })
+        // socket.on('exam', async (data) => {
+        //     try {
+        //         const {id, index, userId} = data
+        //         console.log(data)
+        //         const question = await getQuestionByIndex(id, index)
+        //         const countQuestion = await checkCountQuestion()
+        //         const checkUser = await checkExamUserExit(userId, id, question?.data._id)
+        //         if (checkUser.data) {
+        //             io.emit('exam', {
+        //                 userExit: true,
+        //                 question: question.data,
+        //                 totalQuestion: countQuestion.data
+        //             })
+        //             return;
+        //         }
+        //
+        //         io.emit('exam', {
+        //             question: question.data,
+        //             totalQuestion: countQuestion.data
+        //         })
+        //     } catch (e) {
+        //         console.log(e)
+        //     }
+        // })
         // rating
         socket.on('get-rating', async (data) => {
             const {examId, questionId} = data

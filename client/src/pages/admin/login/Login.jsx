@@ -3,8 +3,10 @@ import React, {useState} from "react";
 import {toast, ToastContainer} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import {login} from "../../../apis/user.js";
+import Loading from "../../../components/loading/loadingText/Loading.jsx";
 
 const Login = () => {
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
     const [data, setData] = useState({
         phone: '',
@@ -19,6 +21,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
+            setLoading(true)
             const res = await login(data)
             if (res.data.role !== 'admin') {
                 toast.error('Bạn không có quyền truy cập', {
@@ -31,7 +34,9 @@ const Login = () => {
             })
             sessionStorage.setItem('user', JSON.stringify(res.data))
             navigate('/admin')
+            setLoading(false)
         } catch (e) {
+            setLoading(false)
             console.log(e)
             toast.error(e?.response?.data?.message, {
                 autoClose: 1000,
@@ -56,7 +61,8 @@ const Login = () => {
                                     <form onSubmit={handleSubmit}>
 
                                         <div className="form-outline mb-4">
-                                            <label className="form-label" htmlFor="form3Example1cg">Số điện thoại</label>
+                                            <label className="form-label" htmlFor="form3Example1cg">Số điện
+                                                thoại</label>
                                             <input type="text" id="form3Example1cg"
                                                    required
                                                    name='phone'
@@ -78,7 +84,9 @@ const Login = () => {
                                         <div className="d-flex justify-content-center">
                                             <button type="submit"
                                                     className="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
-                                                Đăng nhập
+                                                {
+                                                    loading ? <Loading/> : 'Đăng nhập'
+                                                }
                                             </button>
                                         </div>
 

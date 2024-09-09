@@ -97,7 +97,8 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin-top: 100px;
+    margin-top: 200px;
+    margin-bottom: 50px;
 
     .head {
       color: rgba(226, 0, 0, 1);
@@ -119,8 +120,8 @@
       .item {
         display: flex;
         flex-direction: column;
-        min-height: 200px;
-        height: 200px;
+        min-height: 300px;
+        height: 300px;
         justify-content: end;
 
         span {
@@ -132,6 +133,8 @@
           text-align: center;
           display: flex;
           justify-content: center;
+          align-items: center;
+          flex-direction: column;
 
           img {
             width: 50%;
@@ -152,7 +155,7 @@
           span {
             display: block;
             width: 100%;
-            font-size: 14px;
+            font-size: 24px;
             font-weight: 400;
             color: rgba(14, 0, 53, 1);
           }

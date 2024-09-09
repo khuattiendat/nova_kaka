@@ -8,6 +8,12 @@ const createExamUser = async (data) => {
             exam: examId,
             user: userId
         });
+        const checkScore = await checkAnswer(answers.question, answers.answer);
+        if (checkScore) {
+            answers.score = 10000 - Number(answers.timeAnswered);
+        } else {
+            answers.score = 0;
+        }
         if (checkExamUser) {
             checkExamUser.answers.push(answers);
             await checkExamUser.save();
@@ -127,7 +133,6 @@ const getAllExamUser = async (examId) => {
         function calculateScoreAndTime(data) {
             let correctAnswers = 0;
             let totalTime = 0;
-
             data.forEach(item => {
                 item.answers.forEach(answer => {
                     if (answer.answer) { // assuming an answer is correct if it's not an empty string
@@ -147,7 +152,7 @@ const getAllExamUser = async (examId) => {
         return {
             error: false,
             message: 'Get all exam user successfully',
-            data: calculateScoreAndTime(examUser)
+            data: examUser
         }
     } catch (error) {
         return {
@@ -179,6 +184,7 @@ const getRatingExam = async (examId) => {
             let correctAnswers = []; // true
             let inCorrectAnswers = []; //false
             let totalTime = 0;
+            let totalScore = 0;
             for (const answer of (await item).answers) {
                 let check = await checkAnswer(answer.question, answer.answer);
                 if (check) {
@@ -187,23 +193,25 @@ const getRatingExam = async (examId) => {
                     inCorrectAnswers.push(answer.question);
                 }
                 totalTime += answer.timeAnswered;
+                totalScore += answer.score;
             }
             data.push({
                 user: (await item).user,
                 correctAnswers,
                 inCorrectAnswers,
-                totalTime
+                totalTime,
+                totalScore
             })
         }
         // xắp xếp theo số câu đúng giảm dần, thời gian làm bài tăng dần
         data.sort((a, b) => {
-            if (a.correctAnswers.length > b.correctAnswers.length) {
+            if (a.totalScore > b.totalScore) {
                 return -1;
             }
-            if (a.correctAnswers.length < b.correctAnswers.length) {
+            if (a.totalScore < b.totalScore) {
                 return 1;
             }
-            return a.totalTime - b.totalTime;
+            return 0;
         });
         data = data.slice(0, 10);
         return {

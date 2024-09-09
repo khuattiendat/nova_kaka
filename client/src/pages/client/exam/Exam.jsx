@@ -6,7 +6,8 @@ import {decrypt, encrypt} from "../../../utils/crypto.js";
 import {toast} from "react-toastify";
 import {checkUserExit, createExamUser} from "../../../apis/examUser.js";
 import {checkCountQuestion, getQuestionByIndex} from "../../../apis/exam.js";
-import Loading from "../../../components/loading/loadingText/Loading.jsx";
+import LoadingText from "../../../components/loading/loadingText/Loading.jsx";
+import LoadingPage from "../../../components/loading/loadingSpin/Loading.jsx";
 
 const answer = ['A', 'B', 'C', 'D']
 const Exam = () => {
@@ -18,12 +19,14 @@ const Exam = () => {
     const index = decrypt(query.get('index'))
     const [question, setQuestion] = useState({})
     let [time, setTime] = useState(10)
-    const [initTime, setInitTime] = useState(0)
     const [answerId, setAnswerId] = useState('')
     const [startCountdown, setStartCountdown] = useState(false)
+    let [startTime, setStartTime] = useState(0)
     const [loading, setLoading] = useState(false)
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
     const fetchApi = async (id, index) => {
         try {
+            setStartCountdown(false);
             setLoading(true)
             let payload = {
                 id,
@@ -35,7 +38,6 @@ const Exam = () => {
                 checkCountQuestion(id),
             ]);
             setQuestion(res?.data);
-            setInitTime(res?.data?.time);
             localStorage.setItem('totalQuestion', countQuestion?.data);
             setTime(res?.data?.time);
             if (Number(index) > Number(countQuestion?.data)) {
@@ -55,10 +57,12 @@ const Exam = () => {
                 });
                 navigate(`/bang-xep-hang-all/${id}?index=${encrypt(index)}`);
             }
+            setStartTime(Date.now());
             setStartCountdown(true);
             setLoading(false);
         } catch (error) {
             setLoading(false)
+            setStartCountdown(false);
             toast('Đã có lỗi xảy ra', {
                 autoClose: 1000
             });
@@ -76,11 +80,11 @@ const Exam = () => {
             let countdown = setInterval(() => {
                 setTime(prevTime => {
                     if (prevTime <= 1) {
+                        setTime(0)
                         clearInterval(countdown);
                         toast('Hết giờ', {
                             autoClose: 1000
                         });
-                        setTime(0)
                         handleSubmit('');
                         return 0;
                     }
@@ -94,6 +98,11 @@ const Exam = () => {
     }, [startCountdown])
     const handleSubmit = async (answerId = '') => {
         try {
+            //
+            setLoadingSubmit(true)
+            let endTime = Date.now();
+            let timeAnswered = Math.floor(endTime - startTime);
+
             if (user.role === 'admin') {
                 toast.success('Đã nộp bài', {
                     autoClose: 500
@@ -101,14 +110,13 @@ const Exam = () => {
                 navigate(`/bang-xep-hang-all/${id}?index=${encrypt(index)}`)
                 return;
             }
-            let timeAnswered = initTime - time;
             let payload = {
                 examId: id,
                 userId: user?._id,
                 answers: {
                     question: question?._id,
                     answer: answerId,
-                    timeAnswered
+                    timeAnswered,
                 }
             }
             console.log(payload)
@@ -118,7 +126,9 @@ const Exam = () => {
             })
             setAnswerId('')
             navigate(`/bang-xep-hang-all/${id}?index=${encrypt(index)}`)
+            setLoadingSubmit(false)
         } catch (error) {
+            setLoadingSubmit(false)
             toast.error('Đã có lỗi xảy ra', {
                 autoClose: 1000
             })
@@ -129,9 +139,14 @@ const Exam = () => {
         <div className='exam'>
             <Header/>
             {
+                loadingSubmit && <div className='loading'>
+                    <LoadingPage/>
+                </div>
+            }
+            {
                 loading ?
                     <div className='pt-5'>
-                        <Loading/>
+                        <LoadingText/>
                     </div> :
                     <>
                         <div className='head__mb container d-flex d-md-none'>
@@ -170,7 +185,7 @@ const Exam = () => {
                                     {
                                         question?.options && question?.options?.map((item, index) => {
                                             return (
-                                                <div onClick={() => handleSubmit(item?._id)} key={index}
+                                                <div onClick={() => handleSubmit(item?._id, time)} key={index}
                                                      className='col-md-6 d-flex align-items-center'>
                                                     <label
                                                         onClick={() => setAnswerId(item?._id)}
