@@ -5,6 +5,7 @@ import Confetti from 'react-confetti';
 import {useNavigate, useParams} from "react-router-dom";
 import {getMemberExam} from "../../../apis/exam.js";
 import {toast} from "react-toastify";
+import * as XLSX from "xlsx";
 
 function Random() {
     const user = JSON.parse(sessionStorage.getItem('user'));
@@ -24,6 +25,7 @@ function Random() {
     const fetchApi = async () => {
         try {
             const res = await getMemberExam(id);
+            console.log(res.data.members)
             setListUser(res.data);
         } catch (err) {
             toast.error('Đã có lỗi xảy ra', {
@@ -40,13 +42,13 @@ function Random() {
     }, []);
     // Hàm để chọn ngẫu nhiên một user với hiệu ứng đẹp hơn
     const pickRandomUser = () => {
-        if (listUser.length <= 1) {
+        if (listUser.members.length <= 1) {
             toast.error('Chưa có người tham gia', {
                 autoClose: 1000,
             });
             return;
         }
-        const users = listUser.filter(user => user.role !== 'admin')
+        const users = listUser?.members.filter(user => user.role !== 'admin')
             .map(user => {
                 return {name: user.name, phone: user.phone}
             });
@@ -74,8 +76,22 @@ function Random() {
         }, 100); // Thời gian mỗi lần thay đổi user (100ms)
     };
 
+    const handleExport = () => {
+        let users = listUser?.members.filter(user => user.role !== 'admin');
+        const worksheet = XLSX.utils.json_to_sheet(users.map(user => ({
+            Name: user.name,
+            Phone: user.phone,
+        })));
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Users');
+        XLSX.writeFile(workbook, `${listUser?.title}-${listUser?.startTime}.xlsx`);
+    }
+
     return (
         <div className="random">
+            <button onClick={handleExport}>
+                export
+            </button>
             <div className='container random__container'>
                 <div className='img'>
                     <img src="/image/Rectangle%201.png" alt=""/>

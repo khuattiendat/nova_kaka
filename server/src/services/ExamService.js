@@ -292,7 +292,7 @@ const getMemberExam = async (examId) => {
             }
         }
         return {
-            data: exam?.members,
+            data: exam,
             error: false,
             message: 'Members fetched successfully'
         }

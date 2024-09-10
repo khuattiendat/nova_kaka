@@ -56,7 +56,8 @@ const Wait = () => {
                 examId: id,
             })
             socket.on('phong-cho', (data) => {
-                setMembers(data);
+                console.log(data)
+                setMembers(data?.members);
             })
             socket.on('exam-started', () => {
                 navigate(`/thi/${id}?index=${index}`)

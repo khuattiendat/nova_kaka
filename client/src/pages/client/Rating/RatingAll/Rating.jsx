@@ -7,6 +7,7 @@ import button from "bootstrap/js/src/button.js";
 import {decrypt, encrypt} from "../../../../utils/crypto.js";
 import Confetti from 'react-confetti';
 import {motion, AnimatePresence} from 'framer-motion';
+import * as XLSX from "xlsx";
 
 
 const Rating = () => {
@@ -61,7 +62,13 @@ const Rating = () => {
         }
     }
     const handleDownloadData = () => {
-        navigate(`/quay-thuong/${id}`)
+        const worksheet = XLSX.utils.json_to_sheet(rating.map(item => ({
+            Name: item.user.name,
+            Score: item.totalScore
+        })));
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Ratings');
+        XLSX.writeFile(workbook, 'ratings.xlsx');
     }
     return (
         <div className='rating__all'>
@@ -133,8 +140,8 @@ const Rating = () => {
                         Number(index) === Number(totalQuestion) && (
                             <div className='content w-100'>
                                 <div className='row w-100 m-auto'>
-                                    <div className='col-md-3'></div>
-                                    <div className='col-md-6 col-12'>
+                                    <div className='col-md-2'></div>
+                                    <div className='col-md-8 col-12'>
                                         <div className='row w-100 m-auto'>
                                             <div className='col-md-4 col-4 p-0'>
                                                 <motion.div
@@ -152,14 +159,17 @@ const Rating = () => {
                                                     <motion.div
                                                         className='number-2'
                                                         initial={{height: 0, opacity: 0, scale: 0.8}}
-                                                        animate={{height: '50%', opacity: 1, scale: 1}}
+                                                        animate={{height: '75%', opacity: 1, scale: 1}}
                                                         exit={{height: 0, opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
                                                         <span>
+                                                            <span className='fw-semibold'>
                                                               {rating?.length > 0 && rating[1]?.user?.name}
-                                                            <span
-                                                                className='d-block'>{rating?.length > 0 && rating[1]?.totalScore}</span>
+                                                            </span>
+                                                            <span className='d-block'>
+                                                                {rating?.length > 0 && rating[1]?.totalScore}
+                                                            </span>
                                                         </span>
                                                     </motion.div>
                                                 </motion.div>
@@ -185,9 +195,11 @@ const Rating = () => {
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
                                                         <span>
+                                                            <span className='fw-semibold d-block'>
                                                               {rating?.length > 0 && rating[0]?.user?.name}
-                                                            <span
-                                                                className='d-block'>{rating?.length > 0 && rating[0]?.totalScore}</span>
+                                                            </span>
+                                                            <span className='d-block'>
+                                                                {rating?.length > 0 && rating[0]?.totalScore}</span>
                                                         </span>
                                                     </motion.div>
                                                 </motion.div>
@@ -209,12 +221,14 @@ const Rating = () => {
                                                     <motion.div
                                                         className='number-3'
                                                         initial={{height: 0, opacity: 0, scale: 0.8}}
-                                                        animate={{height: '25%', opacity: 1, scale: 1}}
+                                                        animate={{height: '40%', opacity: 1, scale: 1}}
                                                         exit={{height: 0, opacity: 0, scale: 0.8}}
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
-                                                        <span>
+                                                        <span className='text'>
+                                                            <span>
                                                               {rating?.length > 0 && rating[2]?.user?.name}
+                                                            </span>
                                                             <span
                                                                 className='d-block'>{rating?.length > 0 && rating[2]?.totalScore}</span>
                                                         </span>
@@ -223,7 +237,7 @@ const Rating = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className='col-md-3'></div>
+                                    <div className='col-md-2'></div>
                                 </div>
                             </div>
                         )
@@ -245,7 +259,9 @@ const Rating = () => {
                                                 transition={{duration: 0.5, ease: "easeInOut"}}
                                             >
                                                 <td className="text-muted">{index + 4}</td>
-                                                <td>{item?.user?.name}</td>
+                                                <td>
+                                                    {item?.user?.name} - Điểm: {item?.totalScore}
+                                                </td>
                                             </motion.tr>
                                         )) : rating?.map((item, index) => (
                                             <motion.tr

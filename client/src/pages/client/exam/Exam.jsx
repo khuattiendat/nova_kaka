@@ -180,7 +180,7 @@ const Exam = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className='body'>
+                            <div className='body pb-5'>
                                 <div className='row g-3'>
                                     {
                                         question?.options && question?.options?.map((item, index) => {

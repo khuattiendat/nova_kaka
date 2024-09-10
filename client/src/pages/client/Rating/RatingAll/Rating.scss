@@ -129,7 +129,6 @@
           font-weight: 600;
           line-height: 26px;
           color: rgba(14, 0, 53, 1);
-          padding: 10px 0;
           text-align: center;
           display: flex;
           justify-content: center;
@@ -137,7 +136,7 @@
           flex-direction: column;
 
           img {
-            width: 50%;
+            width: 40%;
             display: block;
           }
         }
@@ -162,7 +161,7 @@
         }
 
         div.number-2 {
-          height: 50%;
+          height: 90%;
           font-size: 48px;
           min-height: 50%;
         }
@@ -176,7 +175,7 @@
         }
 
         div.number-3 {
-          height: 25%;
+          height: 50%;
           font-size: 36px;
           color: rgba(0, 234, 66, 1);
           background: rgba(128, 255, 168, 1);
