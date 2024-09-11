@@ -6,7 +6,6 @@ import button from "bootstrap/js/src/button.js";
 import {decrypt, encrypt} from "../../../../utils/crypto.js";
 import Confetti from 'react-confetti';
 import {motion, AnimatePresence} from 'framer-motion';
-import * as XLSX from "xlsx";
 import {useSelector} from "react-redux";
 
 
@@ -36,7 +35,7 @@ const Rating = () => {
                 navigate(`/thi/${id}?index=${encrypt(_index.toString())}`)
             })
         }
-    }, [socketConnection]);
+    }, [socketConnection, user]);
     useEffect(() => {
         localStorage.removeItem('time')
         setShowConfetti(true)
@@ -210,7 +209,7 @@ const Rating = () => {
                                                         transition={{duration: 0.5, ease: "easeOut"}}
                                                     >
                                                         <span className='text'>
-                                                            <span>
+                                                            <span className='fw-semibold'>
                                                               {rating?.length > 0 && rating[2]?.user?.name}
                                                             </span>
                                                             <span
@@ -243,8 +242,13 @@ const Rating = () => {
                                                 transition={{duration: 0.5, ease: "easeInOut"}}
                                             >
                                                 <td className="text-muted">{index + 4}</td>
-                                                <td>
-                                                    {item?.user?.name} - Điểm: {item?.totalScore}
+                                                <td className='d-flex food__td'>
+                                                    <span>
+                                                        {item?.user?.name}
+                                                    </span>
+                                                    <span>
+                                                        {item?.totalScore}
+                                                    </span>
                                                 </td>
                                             </motion.tr>
                                         )) : rating?.map((item, index) => (
@@ -257,7 +261,13 @@ const Rating = () => {
                                                 transition={{duration: 0.5, ease: "easeInOut"}}
                                             >
                                                 <td className="text-muted">{index + 1}</td>
-                                                <td>{item?.user?.name} - Điểm: {item?.totalScore}
+                                                <td className='d-flex food__td'>
+                                                    <span>
+                                                        {item?.user?.name}
+                                                    </span>
+                                                    <span>
+                                                        {item?.totalScore}
+                                                    </span>
                                                 </td>
                                             </motion.tr>
                                         ))}

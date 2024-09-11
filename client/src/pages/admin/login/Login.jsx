@@ -22,7 +22,8 @@ const Login = () => {
         })
     }
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        e.stopPropagation();
         try {
             setLoading(true)
             const res = await login(data)

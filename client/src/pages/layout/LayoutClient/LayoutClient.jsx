@@ -15,7 +15,6 @@ const LayoutClient = () => {
             navigate('/login');
         }
         const socketConnection = io(process.env.REACT_APP_SERVER_URL);
-        console.log(socketConnection)
         dispatch(setSocketConnection(socketConnection));
         return () => {
             socketConnection.disconnect();

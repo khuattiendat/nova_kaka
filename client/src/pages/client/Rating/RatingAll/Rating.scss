@@ -237,6 +237,20 @@
         font-weight: 400;
         font-size: 20px;
       }
+      .food__td {
+        display: flex;
+        height: 100%;
+        span:first-child {
+          width: 70%;
+          border-right: 1px solid rgba(14, 0, 53, 1);
+        }
+        span:last-child {
+          width: 30%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
     }
   }
 }

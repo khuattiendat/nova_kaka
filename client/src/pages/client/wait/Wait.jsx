@@ -38,8 +38,6 @@ const Wait = () => {
             })
         }
     }
-    // socket connection
-    // call socket
     useEffect(() => {
         if (socketConnection) {
             socketConnection.emit('phong-cho', {
@@ -52,7 +50,7 @@ const Wait = () => {
                 navigate(`/thi/${id}?index=${index}`)
             })
         }
-    }, [socketConnection])
+    }, [socketConnection, user])
     useEffect(() => {
         fetchApi()
     }, []);
