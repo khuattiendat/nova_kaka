@@ -2,18 +2,18 @@ import './wait.scss';
 import {useEffect, useState} from "react";
 import Header from "../../../components/header/Header.jsx";
 import {useNavigate, useParams} from "react-router-dom";
-import {io} from "socket.io-client";
 import {getExamById} from "../../../apis/exam.js";
 import {toast} from "react-toastify";
-import {showAlertConfirm} from "../../../utils/showAlert.js";
 import {encrypt} from "../../../utils/crypto.js";
 import {motion, AnimatePresence} from 'framer-motion';
+import {useSelector} from "react-redux";
+import {showAlertConfirm} from "../../../utils/showAlert.js";
 
 const Wait = () => {
-    const user = JSON.parse(sessionStorage.getItem('user'));
+    const user = useSelector(state => state.user);
+    const socketConnection = useSelector(state => state.user.socketConnection);
     const index = encrypt('1');
     const [members, setMembers] = useState([])
-    const [socket, setSocket] = useState(null)
     const [exam, setExam] = useState({})
     const [startCountdown, setStartCountdown] = useState(false)
     const [time, setTime] = useState({
@@ -39,31 +39,20 @@ const Wait = () => {
         }
     }
     // socket connection
-    useEffect(() => {
-        if (!user) {
-            navigate('/')
-        }
-        const socketConnection = io(process.env.REACT_APP_SERVER_URL)
-        setSocket(socketConnection)
-        return () => {
-            socketConnection.disconnect()
-        }
-    }, [])
     // call socket
     useEffect(() => {
-        if (socket) {
-            socket.emit('phong-cho', {
+        if (socketConnection) {
+            socketConnection.emit('phong-cho', {
                 examId: id,
             })
-            socket.on('phong-cho', (data) => {
-                console.log(data)
-                setMembers(data?.members);
+            socketConnection.on('phong-cho', (data) => {
+                setMembers(data);
             })
-            socket.on('exam-started', () => {
+            socketConnection.on('exam-started', () => {
                 navigate(`/thi/${id}?index=${index}`)
             })
         }
-    }, [socket])
+    }, [socketConnection])
     useEffect(() => {
         fetchApi()
     }, []);
@@ -109,7 +98,7 @@ const Wait = () => {
     const handleStart = async () => {
         let confirm = await showAlertConfirm('Bạn có chắc chắn muốn bắt đầu cuộc thi?')
         if (confirm) {
-            socket.emit('update-start-time', {
+            socketConnection.emit('update-start-time', {
                 examId: id
             })
         }
@@ -119,7 +108,7 @@ const Wait = () => {
             <Header/>
             <div className='d-block d-sm-none'>
                 <div className='head__mb container'>
-                    <div className='text'>Cuộc thi sẽ bắt đầu trong</div>
+                    <div className='text'>Thời gian còn lại để tham gia</div>
                     <div className='time'>{time.hour}:{time.minute}:{time.seconds}</div>
                 </div>
             </div>
@@ -138,7 +127,7 @@ const Wait = () => {
                         <div className='list__user left'>
                             <div className='row h-100 g-3'>
                                 {
-                                    members.length > 0 && (
+                                    members?.length > 0 && (
                                         <div className='row h-100 g-3'>
                                             <AnimatePresence>
                                                 {members.slice(0, 8).map((item, index) => (
@@ -162,7 +151,7 @@ const Wait = () => {
                                             <div className='col-12 d-flex justify-content-end'>
                                                 <span>
                                                     {
-                                                        members.length > 8 && <b>{members.length - 8} Người khác</b>
+                                                        members?.length > 8 && <b>{members?.length - 8} Người khác</b>
                                                     }
                                                 </span>
                                             </div>
@@ -175,18 +164,25 @@ const Wait = () => {
                     <div className='col-md-6 col-12 col-lg-4'>
                         <div className='right'>
                             <div className='head d-none d-md-flex'>
-                                <div className='text'>Cuộc thi sẽ bắt đầu trong</div>
+                                <div className='text'>Thời gian còn lại để tham gia</div>
                                 <div className='time'>{time.hour}:{time.minute}:{time.seconds}</div>
                             </div>
                             <div className='thele'>
-                                <div className='title'>Chúc mừng bạn đã tham gia NovaQuiz</div>
+                                <div className='title'>Chúc mừng bạn đã tham gia vòng quay may mắn</div>
                                 <div className='content'>
                                     <span>
-                                        - Bạn sẽ tham gia trả lời 10 câu hỏi, bạn hãy lựa chọn 1 đáp án đúng nhất trong thời
-                                    gian 10 giây.
-                                    </span>
-                                    <span>
-                                       - Bạn sẽ chiến thắng khi là người trả lời đúng và nhanh nhất
+                                        - Bạn sẽ là một trong những người may mắn nhận được phần quà giá trị từ<span
+                                        style={{
+                                            color: '#F37435',
+                                            display: 'inline',
+                                            fontSize: '20px',
+                                            textTransform: 'uppercase'
+                                        }}> nova</span><span style={{
+                                        color: '#70B54B',
+                                        display: 'inline',
+                                        fontSize: '20px',
+                                        textTransform: 'uppercase'
+                                    }}>Edu</span>
                                     </span>
                                 </div>
                                 <h3 className='mt-3 text-center'>

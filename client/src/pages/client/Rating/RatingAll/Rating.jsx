@@ -1,6 +1,5 @@
 import Header from "../../../../components/header/Header.jsx";
 import {useEffect, useState} from "react";
-import {io} from "socket.io-client";
 import {useNavigate, useParams} from "react-router-dom";
 import './Rating.scss'
 import button from "bootstrap/js/src/button.js";
@@ -8,45 +7,36 @@ import {decrypt, encrypt} from "../../../../utils/crypto.js";
 import Confetti from 'react-confetti';
 import {motion, AnimatePresence} from 'framer-motion';
 import * as XLSX from "xlsx";
+import {useSelector} from "react-redux";
 
 
 const Rating = () => {
-    const [socket, setSocket] = useState(null)
+    const user = useSelector(state => state.user)
+    const socketConnection = useSelector(state => state.user.socketConnection)
     const [showConfetti, setShowConfetti] = useState(false);
     const params = useParams()
     const {id} = params;
     const query = new URLSearchParams(window.location.search)
     const index = decrypt(query.get('index'));
-    const user = JSON.parse(sessionStorage.getItem('user'));
     const [rating, setRating] = useState([])
     const navigate = useNavigate();
     const totalQuestion = localStorage.getItem('totalQuestion') || 1;
     useEffect(() => {
-        if (!user) {
-            navigate('/')
-        }
-        const socketConnection = io(process.env.REACT_APP_SERVER_URL)
-        setSocket(socketConnection)
-        return () => {
-            socketConnection.disconnect()
-        }
-    }, [])
-    useEffect(() => {
-        if (socket) {
-            socket.emit('rating', {
+        if (socketConnection) {
+            socketConnection.emit('rating', {
                 examId: id
             })
-            socket.on('rating', (data) => {
+            socketConnection.on('rating', (data) => {
                 console.log(data)
                 setRating(data?.rating)
             })
-            socket.on('next-question', (data) => {
+            socketConnection.on('next-question', (data) => {
                 const {index} = data
                 let _index = Number(index) + 1
                 navigate(`/thi/${id}?index=${encrypt(_index.toString())}`)
             })
         }
-    }, [socket]);
+    }, [socketConnection]);
     useEffect(() => {
         localStorage.removeItem('time')
         setShowConfetti(true)
@@ -55,20 +45,14 @@ const Rating = () => {
         }, 5000)
     }, [])
     const handleNext = () => {
-        if (socket) {
-            socket.emit('next-question', {
+        if (socketConnection) {
+            socketConnection.emit('next-question', {
                 index: index
             })
         }
     }
-    const handleDownloadData = () => {
-        const worksheet = XLSX.utils.json_to_sheet(rating.map(item => ({
-            Name: item.user.name,
-            Score: item.totalScore
-        })));
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Ratings');
-        XLSX.writeFile(workbook, 'ratings.xlsx');
+    const handleRandom = () => {
+        navigate(`/quay-thuong/${id}`)
     }
     return (
         <div className='rating__all'>
@@ -118,7 +102,7 @@ const Rating = () => {
                                     {
                                         Number(index) === Number(totalQuestion) ?
 
-                                            <button onClick={handleDownloadData}
+                                            <button onClick={handleRandom}
                                                     className='btn btn-primary btn-quay'>
                                                 Quay thưởng
                                             </button> :

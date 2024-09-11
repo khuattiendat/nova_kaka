@@ -33,6 +33,12 @@ export const inputDataExam = [
 ]
 export const examColumns = [
     {
+        field: "_id",
+        type: "string",
+        headerName: "ID",
+        width: 250,
+    },
+    {
         field: "title",
         type: "string",
         headerName: "Tên đề thi",

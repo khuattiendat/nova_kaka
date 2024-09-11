@@ -13,11 +13,12 @@ import {deleteUser} from "../../apis/user.js";
 import {deleteQuestion} from "../../apis/question.js";
 import {deleteExam} from "../../apis/exam.js";
 import Loading from "../loading/loadingSpin/Loading.jsx";
+import {useSelector} from "react-redux";
 
 
 const DataTable = (props) => {
     const {columns, rows, type, loading} = props;
-    const user = JSON.parse(sessionStorage.getItem("user"));
+    const user = useSelector(state => state.user)
     const navigate = useNavigate();
     const [_loading, setLoading] = useState(false);
     const handleDeleteUser = async (id) => {

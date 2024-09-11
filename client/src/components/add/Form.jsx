@@ -8,10 +8,11 @@ import {CKEditor} from "@ckeditor/ckeditor5-react";
 import Loading from "../loading/loadingSpin/Loading.jsx";
 import {createQuestion, updateQuestion} from "../../apis/question.js";
 import {createExam, updateExam} from "../../apis/exam.js";
+import {useSelector} from "react-redux";
 
 const Form = (props) => {
     const {isEdit, type, columns, _data} = props;
-    const user = JSON.parse(sessionStorage.getItem('user'));
+    const user = useSelector(state => state.user)
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     console.log(_data)

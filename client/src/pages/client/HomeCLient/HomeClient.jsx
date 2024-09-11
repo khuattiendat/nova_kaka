@@ -5,6 +5,7 @@ import {createUser} from "../../../apis/user.js";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import Loading from "../../../components/loading/loadingText/Loading.jsx";
+import {setUser} from "../../../redux/userSlice.js";
 
 
 const HomeClient = () => {
@@ -16,6 +17,10 @@ const HomeClient = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
+    const regexPhoneNumber = (phone) => {
+        const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+        return !!phone.match(regexPhoneNumber);
+    }
     const handleChange = (e) => {
         setData({
             ...data,
@@ -30,11 +35,19 @@ const HomeClient = () => {
                 toast.warn('Vui lòng điền đầy đủ thông tin', {
                     autoClose: 500,
                 })
+                setLoading(false)
+                return
+            }
+            if (!regexPhoneNumber(data.phone)) {
+                toast.warn('Số điện thoại không hợp lệ', {
+                    autoClose: 500,
+                })
+                setLoading(false)
                 return
             }
             const res = await createUser(data);
-            navigate('/danh-sach-cuoc-thi')
-            sessionStorage.setItem('user', JSON.stringify(res.data))
+            dispatch(setUser(res.data));
+            navigate('/')
             setLoading(false);
         } catch (e) {
             setLoading(false);

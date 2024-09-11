@@ -5,14 +5,14 @@ import {questionColumns} from "../../../utils/data/questionData.js";
 import {userColumns} from "../../../utils/data/userData.js";
 import {examColumns} from "../../../utils/data/examData.js";
 import {useEffect, useState} from "react";
-import {createAxios} from "../../../utils/createInstance.js";
 import {getAllUser} from "../../../apis/user.js";
 import {getAllQuestion} from "../../../apis/question.js";
 import {getAllExam} from "../../../apis/exam.js";
 import {toast, ToastContainer} from "react-toastify";
+import {useSelector} from "react-redux";
 
 const List = ({type}) => {
-    const user = JSON.parse(sessionStorage.getItem('user'));
+    const user = useSelector(state => state.user)
     const {state} = useLocation();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);

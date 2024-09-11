@@ -4,10 +4,13 @@ import {toast, ToastContainer} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import {login} from "../../../apis/user.js";
 import Loading from "../../../components/loading/loadingText/Loading.jsx";
+import {useDispatch} from "react-redux";
+import {setUser} from "../../../redux/userSlice.js";
 
 const Login = () => {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [data, setData] = useState({
         phone: '',
         password: ''
@@ -32,7 +35,7 @@ const Login = () => {
             toast.success('Đăng nhập thành công', {
                 autoClose: 1000,
             })
-            sessionStorage.setItem('user', JSON.stringify(res.data))
+            dispatch(setUser(res.data))
             navigate('/admin')
             setLoading(false)
         } catch (e) {

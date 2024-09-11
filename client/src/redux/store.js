@@ -4,6 +4,7 @@ import {combineReducers} from '@reduxjs/toolkit'
 import storage from 'redux-persist/lib/storage'
 import userReducer from './userSlice'
 import {
+    persistStore,
     persistReducer,
     FLUSH,
     REHYDRATE,
@@ -17,21 +18,18 @@ import autoMergeLevel2 from "redux-persist/es/stateReconciler/autoMergeLevel2";
 const persistConfig = {
     key: 'root',
     storage: storage,
-    stateReconciler: autoMergeLevel2,
+    version: 1,
+    autoMergeLevel2: autoMergeLevel2,
 }
-export const rootReducers = combineReducers({
+const rootReducers = combineReducers({
     user: userReducer,
-
 })
 const persistedReducer = persistReducer(persistConfig, rootReducers)
 const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
-            thunk: true,
-            serializableCheck: {
-                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-            },
+            serializableCheck: false,
         }),
 })
 setupListeners(store.dispatch)

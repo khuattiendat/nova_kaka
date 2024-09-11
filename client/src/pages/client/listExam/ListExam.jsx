@@ -6,11 +6,12 @@ import {getExamComing, updateMemberExam} from "../../../apis/exam.js";
 import {toast} from "react-toastify";
 import LoadingText from "../../../components/loading/loadingText/Loading.jsx";
 import LoadingPage from "../../../components/loading/loadingSpin/Loading.jsx";
+import {useSelector} from "react-redux";
 
 const ListExam = () => {
     const navigate = useNavigate();
     const [listExam, setListExam] = useState([]);
-    const user = JSON.parse(sessionStorage.getItem('user'));
+    const user = useSelector(state => state.user)
     const [loading, setLoading] = useState(false)
     const [loadingJoin, setLoadingJoin] = useState(false)
     const fetchApi = async () => {
@@ -25,11 +26,7 @@ const ListExam = () => {
         }
     }
     useEffect(() => {
-        if (!user) {
-            navigate('/')
-        }
         localStorage.removeItem('time')
-        localStorage.removeItem('index')
         fetchApi()
     }, [])
     const handleClick = async (id) => {
@@ -65,14 +62,18 @@ const ListExam = () => {
             </div>
             <div className='container'>
                 {
-                    listExam.length > 0 ?
-                        (<h2 className='title fs-6 text-center'>Cuộc thi đang diễn ra</h2>) :
-                        <h2 className='title fs-6 text-center'>Rất tiếc, cuộc thi đang diễn ra. Hẹn gặp bạn ở NovaQuiz
-                            sắp tới nhé !</h2>
+                    loading ? '' :
+                        listExam.length > 0 ?
+                            (<h2 className='title fs-6 text-center'>Cuộc thi đang diễn ra</h2>) :
+                            <h2 className='title fs-6 text-center'>Rất tiếc, cuộc thi đang diễn ra. Hẹn gặp bạn ở
+                                NovaQuiz
+                                sắp tới nhé !</h2>
                 }
                 <div className='row g-3'>
                     {
-                        loading ? <LoadingText/> :
+                        loading ? <div className='mt-5'>
+                                <LoadingText/>
+                            </div> :
                             listExam.length > 0 ? listExam.map((item, index) => {
                                     return (
                                         <div className='col-md-6 col-12 ' key={index}>

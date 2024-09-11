@@ -9,10 +9,11 @@ import Loading from "../../../components/loading/loadingSpin/Loading.jsx";
 import {getQuestionById} from "../../../apis/question.js";
 import {getExamById} from "../../../apis/exam.js";
 import {toast} from "react-toastify";
+import {useSelector} from "react-redux";
 
 const NewUser = ({type, isEdit}) => {
     const params = useParams();
-    const user = JSON.parse(sessionStorage.getItem('user'));
+    const user = useSelector(state => state.user)
     const navigate = useNavigate();
     const {id} = params;
     const [data, setData] = useState({})

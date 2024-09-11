@@ -8,10 +8,11 @@ import {checkUserExit, createExamUser} from "../../../apis/examUser.js";
 import {checkCountQuestion, getQuestionByIndex} from "../../../apis/exam.js";
 import LoadingText from "../../../components/loading/loadingText/Loading.jsx";
 import LoadingPage from "../../../components/loading/loadingSpin/Loading.jsx";
+import {useSelector} from "react-redux";
 
 const answer = ['A', 'B', 'C', 'D']
 const Exam = () => {
-    const user = JSON.parse(sessionStorage.getItem('user'))
+    const user = useSelector(state => state.user)
     const navigate = useNavigate()
     const params = useParams()
     const {id} = params;
@@ -32,7 +33,6 @@ const Exam = () => {
                 id,
                 index
             }
-            // Create an array of promises
             const [res, countQuestion] = await Promise.all([
                 getQuestionByIndex(payload),
                 checkCountQuestion(id),
@@ -70,9 +70,6 @@ const Exam = () => {
         }
     }
     useEffect(() => {
-        if (!user) {
-            navigate('/')
-        }
         fetchApi(id, index)
     }, [index])
     useEffect(() => {

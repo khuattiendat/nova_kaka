@@ -2,8 +2,8 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
     _id: "",
-    userName: "",
-    accessToken: "",
+    name: "",
+    phone: "",
     role: "",
     socketConnection: null
 }
@@ -14,23 +14,14 @@ export const userSlice = createSlice({
     reducers: {
         setUser: (state, action) => {
             state._id = action?.payload?._id
-            state.userName = action?.payload?.userName
+            state.name = action?.payload?.name
+            state.phone = action?.payload?.phone
             state.role = action?.payload?.role
-        },
-        setAll: (state, action) => {
-            state._id = action?.payload?._id
-            state.userName = action?.payload.userName
-            state.accessToken = action?.payload.accessToken
-            state.role = action?.payload.role
-            state.socketConnection = action?.payload.socketConnection
-        },
-        setToken: (state, action) => {
-            state.accessToken = action.payload
         },
         logout: (state, action) => {
             state._id = ""
-            state.userName = ""
-            state.accessToken = ""
+            state.name = ""
+            state.phone = ""
             state.role = ""
             state.socketConnection = null
         },
@@ -41,6 +32,6 @@ export const userSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const {setUser, setAll, setToken, logout, setOnlineUser, setSocketConnection} = userSlice.actions
+export const {setUser, logout, setOnlineUser, setSocketConnection} = userSlice.actions
 
 export default userSlice.reducer
