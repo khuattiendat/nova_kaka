@@ -16,14 +16,14 @@ const createUser = async (data) => {
                 data: null
             }
         }
-        const checkUser = await UserModel.findOne({phone})
+        const checkUser = await UserModel.findOne({ phone });
         if (checkUser) {
-            const {password, ...dataUser} = checkUser._doc;
+            const { password, ...dataUser } = checkUser._doc;
             return {
                 error: false,
                 message: 'Create user successfully',
                 data: dataUser
-            }
+            };
         }
         const user = await new UserModel({name, email, phone});
         await user.save();
@@ -82,7 +82,7 @@ const loginUser = async (data) => {
 }
 const getAllUser = async () => {
     try {
-        const users = await UserModel.find().select('-password').sort({'createdAt': -1});
+        const users = await UserModel.find({}).select('-password').sort({'createdAt': -1});
         return {
             error: false,
             message: 'Get all users successfully',

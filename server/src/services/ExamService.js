@@ -1,3 +1,4 @@
+"use strict";
 const ExamModel = require('../models/ExamModel');
 const {checkCountQuestion, getQuestionLimit} = require("./QuestionService");
 const createExam = async (examData) => {
@@ -82,7 +83,7 @@ const getComingExam = async () => {
             .populate({
                 path: 'members',
                 select: '-password' // exclude 'password'
-            });
+            }) || [];
         const examsData = [];
         const date = new Date().getTime();
         if (exams) {
@@ -329,7 +330,6 @@ const updateStartTime = async (examId, startTime) => {
         }
     }
 }
-// lấy ra câu hỏi theo số thứ tự truyền vào
 const getQuestionByIndex = async (examId, index) => {
     try {
         const exam = await ExamModel.findById(examId)
