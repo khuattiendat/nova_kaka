@@ -9,7 +9,8 @@ import * as XLSX from "xlsx";
 import {useSelector} from "react-redux";
 
 function Random() {
-    const user = useSelector(state => state.user);
+    // const user = useSelector(state => state.user);
+    const user = JSON.parse(sessionStorage.getItem('user'))
     const [listUser, setListUser] = useState([]);
     const navigate = useNavigate();
     const params = useParams();
@@ -21,7 +22,7 @@ function Random() {
     const [isAnimating, setIsAnimating] = useState(false);
     const [showConfetti, setShowConfetti] = useState(false);
     const [show, setShow] = useState(false);
-
+    console.log('random')
     const handleClose = () => setShow(false);
     const fetchApi = async () => {
         try {

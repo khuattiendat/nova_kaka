@@ -1,5 +1,5 @@
 import './wait.scss';
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import Header from "../../../components/header/Header.jsx";
 import {useNavigate, useParams} from "react-router-dom";
 import {getExamById} from "../../../apis/exam.js";
@@ -8,12 +8,14 @@ import {encrypt} from "../../../utils/crypto.js";
 import {motion, AnimatePresence} from 'framer-motion';
 import {useSelector} from "react-redux";
 import {showAlertConfirm} from "../../../utils/showAlert.js";
+import _ from "lodash";
 
 const Wait = () => {
-    const user = useSelector(state => state.user);
+    // const user = useSelector(state => state.user);
+    const user = JSON.parse(sessionStorage.getItem('user'))
     const socketConnection = useSelector(state => state.user.socketConnection);
     const index = encrypt('1');
-    const [members, setMembers] = useState([])
+    const [members, setMembers] = useState([]);
     const [exam, setExam] = useState({})
     const [startCountdown, setStartCountdown] = useState(false)
     const [time, setTime] = useState({
@@ -21,13 +23,18 @@ const Wait = () => {
         minute: 0,
         seconds: 0
     })
+    console.log('wait')
     const params = useParams()
     const {id} = params;
     const navigate = useNavigate();
+    const debouncedNavigate = useMemo(() => _.debounce((path) => {
+        navigate(path);
+    }, 500), [navigate]);
     const fetchApi = async () => {
         try {
             setStartCountdown(false)
             const res = await getExamById(id);
+            localStorage.setItem('totalQuestion', res?.data?.questions?.length);
             setExam(res.data)
             setStartCountdown(true);
         } catch (e) {
@@ -47,10 +54,10 @@ const Wait = () => {
                 setMembers(data);
             })
             socketConnection.on('exam-started', () => {
-                navigate(`/thi/${id}?index=${index}`)
+                debouncedNavigate(`/thi/${id}?index=${index}`)
             })
         }
-    }, [socketConnection, user])
+    }, [socketConnection])
     useEffect(() => {
         fetchApi()
     }, []);
@@ -166,21 +173,13 @@ const Wait = () => {
                                 <div className='time'>{time.hour}:{time.minute}:{time.seconds}</div>
                             </div>
                             <div className='thele'>
-                                <div className='title'>Chúc mừng bạn đã tham gia vòng quay may mắn</div>
+                                <div className='title'>Chúc mừng bạn đã tham gia NovaQuiz</div>
                                 <div className='content'>
-                                    <span>
-                                        - Bạn sẽ là một trong những người may mắn nhận được phần quà giá trị từ<span
-                                        style={{
-                                            color: '#F37435',
-                                            display: 'inline',
-                                            fontSize: '20px',
-                                            textTransform: 'uppercase'
-                                        }}> nova</span><span style={{
-                                        color: '#70B54B',
-                                        display: 'inline',
-                                        fontSize: '20px',
-                                        textTransform: 'uppercase'
-                                    }}>Edu</span>
+                                    <span className='f-6 fw-semibold'>
+                                        - Bạn sẽ tham gia trả lời 10 câu hỏi, bạn hãy lựa chọn 1 đáp án đúng nhất trong thời gian 10 giây.
+                                    </span>
+                                    <span className='fs-6 fw-semibold'>
+                                        - Bạn sẽ chiến thắng khi là người trả lời đúng và nhanh nhất
                                     </span>
                                 </div>
                                 <h3 className='mt-3 text-center'>

@@ -59,19 +59,5 @@ const UserController = {
             })
         }
     },
-    getAllUserTest: async (req, res) => {
-        try {
-            const result = await getAllUserTest();
-            if (result.error) {
-                return res.status(400).json(result);
-            }
-            res.status(200).json(result);
-        } catch (e) {
-            res.status(500).json({
-                error: true,
-                message: e.message || e
-            })
-        }
-    }
 }
 module.exports = UserController;

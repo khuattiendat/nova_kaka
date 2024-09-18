@@ -25,3 +25,9 @@ export const createUser = async (payload) => {
     });
     return res.data;
 }
+export const getAllUserTest = async () => {
+    const res = await axios.get(`${BASE_URL}/api/users/test/get-all`, {
+        withCredentials: true,
+    });
+    return res.data;
+}

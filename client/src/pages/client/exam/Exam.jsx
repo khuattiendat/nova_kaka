@@ -5,14 +5,13 @@ import {useNavigate, useParams} from "react-router-dom";
 import {decrypt, encrypt} from "../../../utils/crypto.js";
 import {toast} from "react-toastify";
 import {checkUserExit, createExamUser} from "../../../apis/examUser.js";
-import {checkCountQuestion, getQuestionByIndex} from "../../../apis/exam.js";
+import {getQuestionByIndex} from "../../../apis/exam.js";
 import LoadingText from "../../../components/loading/loadingText/Loading.jsx";
 import LoadingPage from "../../../components/loading/loadingSpin/Loading.jsx";
-import {useSelector} from "react-redux";
 
 const answer = ['A', 'B', 'C', 'D']
 const Exam = () => {
-    const user = useSelector(state => state.user)
+    const user = JSON.parse(sessionStorage.getItem('user'))
     const navigate = useNavigate()
     const params = useParams()
     const {id} = params;
@@ -25,6 +24,36 @@ const Exam = () => {
     let [startTime, setStartTime] = useState(0)
     const [loading, setLoading] = useState(false)
     const [loadingSubmit, setLoadingSubmit] = useState(false)
+    const totalQuestion = localStorage.getItem('totalQuestion')
+    //
+    const [intervalId, setIntervalId] = useState(null); // Lưu id của interval
+    console.log('exam')
+    console.log('timeLeft', time)
+    useEffect(() => {
+        // Nếu time là 0, clearInterval và gọi API
+        if (time === 0 && intervalId) {
+            clearInterval(intervalId);
+            handleSubmit('');
+        }
+    }, [time, intervalId]);
+
+
+    useEffect(() => {
+        // Thiết lập interval
+        if (startCountdown) {
+            const id = setInterval(() => {
+                setTime((prevTime) => (prevTime > 0 ? prevTime - 1 : 0)); // Đảm bảo timeLeft không âm
+            }, 1000);
+            setIntervalId(id);
+
+            // Dọn dẹp interval khi component unmount
+            return () => clearInterval(id);
+        }
+
+    }, [startCountdown]);
+
+
+    //
     const fetchApi = async (id, index) => {
         try {
             setStartCountdown(false);
@@ -33,15 +62,11 @@ const Exam = () => {
                 id,
                 index
             }
-            const [res, countQuestion] = await Promise.all([
-                getQuestionByIndex(payload),
-                checkCountQuestion(id),
-            ]);
+            const res = await getQuestionByIndex(payload)
             setQuestion(res?.data);
-            localStorage.setItem('totalQuestion', countQuestion?.data);
             setTime(res?.data?.time);
-            if (Number(index) > Number(countQuestion?.data)) {
-                navigate(`/bang-xep-hang-all/${id}?index=${encrypt(countQuestion?.data)}`);
+            if (Number(index) > Number(totalQuestion?.data)) {
+                navigate(`/bang-xep-hang-all/${id}?index=${encrypt(totalQuestion)}`);
                 return;
             }
             let payloadUser = {
@@ -69,33 +94,36 @@ const Exam = () => {
             console.log(error);
         }
     }
+
     useEffect(() => {
         fetchApi(id, index)
     }, [index])
-    useEffect(() => {
-        if (startCountdown) {
-            let countdown = setInterval(() => {
-                setTime(prevTime => {
-                    if (prevTime <= 1) {
-                        setTime(0)
-                        clearInterval(countdown);
-                        toast('Hết giờ', {
-                            autoClose: 1000
-                        });
-                        handleSubmit('');
-                        return 0;
-                    }
-                    return prevTime - 1;
-                });
-            }, 1000);
-            return () => {
-                clearInterval(countdown);
-            };
-        }
-    }, [startCountdown])
+
+    // useEffect(() => {
+    //     if (startCountdown) {
+    //         let countdown = setInterval(async () => {
+    //             await setTime(prevTime => {
+    //                 if (prevTime <= 1) {
+    //                     console.log('interval = 0')
+    //                     clearInterval(countdown);
+    //                     //   handleSubmit('');
+    //                     return 0;
+    //                 }
+    //                 return prevTime - 1;
+    //             });
+    //             console.log(time)
+    //         }, 1000);
+    //         return () => {
+    //             console.log('clear interval')
+    //             clearInterval(countdown);
+    //             console.log(time)
+    //         };
+    //     }
+    // }, [startCountdown])
+
     const handleSubmit = async (answerId = '') => {
         try {
-            //
+            clearInterval(intervalId);
             setLoadingSubmit(true)
             let endTime = Date.now();
             let timeAnswered = Math.floor(endTime - startTime);
@@ -116,7 +144,6 @@ const Exam = () => {
                     timeAnswered,
                 }
             }
-            console.log(payload)
             await createExamUser(payload)
             toast.success('Đã nộp bài', {
                 autoClose: 500
@@ -132,6 +159,7 @@ const Exam = () => {
             console.log(error)
         }
     }
+
     return (
         <div className='exam'>
             <Header/>
@@ -182,7 +210,7 @@ const Exam = () => {
                                     {
                                         question?.options && question?.options?.map((item, index) => {
                                             return (
-                                                <div onClick={() => handleSubmit(item?._id, time)} key={index}
+                                                <div onClick={() => handleSubmit(item?._id)} key={index}
                                                      className='col-md-6 d-flex align-items-center'>
                                                     <label
                                                         onClick={() => setAnswerId(item?._id)}

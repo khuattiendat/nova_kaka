@@ -1,11 +1,13 @@
 import './home.scss'
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import {createUser} from "../../../apis/user.js";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import Loading from "../../../components/loading/loadingText/Loading.jsx";
 import {setUser} from "../../../redux/userSlice.js";
+import axios from "axios";
+//
 
 
 const HomeClient = () => {
@@ -46,6 +48,7 @@ const HomeClient = () => {
                 return
             }
             const res = await createUser(data);
+            sessionStorage.setItem('user', JSON.stringify(res.data));
             dispatch(setUser(res.data));
             navigate('/')
             setLoading(false);
@@ -58,11 +61,14 @@ const HomeClient = () => {
         }
 
     }
+
+    ////
     return (
         <div className='home_client'>
             <div className='container px-md-5 m-sm-3 w-100 h-100'>
                 <div className='row'>
-                    <div className='col-md-6'></div>
+                    <div className='col-md-6'>
+                    </div>
                     <div className='col-md-6'>
                         <form onSubmit={handleSubmit}>
                             <div className='img'>

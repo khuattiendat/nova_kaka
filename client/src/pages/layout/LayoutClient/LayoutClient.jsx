@@ -8,13 +8,18 @@ import {useDispatch, useSelector} from "react-redux";
 const queryClient = new QueryClient();
 const LayoutClient = () => {
     const dispatch = useDispatch();
-    const user = useSelector(state => state.user);
+    // const user = useSelector(state => state.user);
+    const user = JSON.parse(sessionStorage.getItem('user'));
     const navigate = useNavigate();
     useEffect(() => {
-        if (user?._id === '') {
+        if (!user) {
             navigate('/login');
         }
-        const socketConnection = io(process.env.REACT_APP_SERVER_URL);
+        const socketConnection = io(process.env.REACT_APP_SERVER_URL, {
+            transports: ['websocket'],
+            withCredentials: true,
+        });
+        console.log(socketConnection)
         dispatch(setSocketConnection(socketConnection));
         return () => {
             socketConnection.disconnect();

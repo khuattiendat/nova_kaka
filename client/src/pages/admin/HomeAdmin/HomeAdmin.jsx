@@ -5,8 +5,9 @@ import {toast} from "react-toastify";
 import {useSelector} from "react-redux";
 
 const HomeAdmin = () => {
-    const user = useSelector(state => state.user)
+    // const user = useSelector(state => state.user);
     const navigate = useNavigate();
+    const user = JSON.parse(sessionStorage.getItem('user'))
     useEffect(() => {
         if (!user || user.role !== 'admin') {
             toast.error('Bạn không có quyền truy cập', {

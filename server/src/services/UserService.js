@@ -119,26 +119,9 @@ const deleteUser = async (id) => {
         }
     }
 }
-const getAllUserTest = async () => {
-    try {
-        const users = await UserModel.find({}).select('-password').sort({'createdAt': -1});
-        return {
-            error: false,
-            message: 'Get all users successfully',
-            data: users
-        }
-    } catch (error) {
-        return {
-            error: true,
-            message: error.message || error,
-            data: null
-        }
-    }
-}
 module.exports = {
     createUser,
     loginUser,
     getAllUser,
     deleteUser,
-    getAllUserTest
 }

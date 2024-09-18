@@ -18,7 +18,8 @@ import {useSelector} from "react-redux";
 
 const DataTable = (props) => {
     const {columns, rows, type, loading} = props;
-    const user = useSelector(state => state.user)
+    // const user = useSelector(state => state.user)
+    const user = JSON.parse(sessionStorage.getItem('user'))
     const navigate = useNavigate();
     const [_loading, setLoading] = useState(false);
     const handleDeleteUser = async (id) => {
@@ -96,17 +97,33 @@ const DataTable = (props) => {
     const actionColumn = {
         field: "action",
         headerName: "Action",
-        width: 200,
+        width: 250,
+        align: "center",
         renderCell: (params) => {
             return (
                 <div className="action">
-                    <Link to={type === 'user' ? '#' : `/admin/${type}/sua/${params.row._id}`}
-                          className={type === 'user' ? 'btn disabled' : 'btn btn-secondary'}>
-                        Sửa
-                    </Link>
-                    <div className="delete" onClick={() => handleDelete(params.row._id)}>
-                        <button className='btn btn-danger'>Xóa</button>
-                    </div>
+                    {
+                        type !== 'data' &&
+                        <Link to={type === 'user' ? '#' : `/admin/${type}/sua/${params.row._id}`}
+                              className={type === 'user' ? 'btn disabled' : 'btn btn-secondary'}>
+                            Sửa
+                        </Link>
+                    }
+
+                    {
+                        type !== 'data' &&
+                        <div className="delete" onClick={() => handleDelete(params.row._id)}>
+                            <button className='btn btn-danger'>Xóa</button>
+                        </div>
+                    }
+                    {
+                        type === 'exam' &&
+                        <Link to={`/admin/data/${params.row._id}`}
+                              className='btn btn-primary'>
+                            Data
+                        </Link>
+                    }
+
                 </div>
             );
         },
@@ -156,7 +173,6 @@ const DataTable = (props) => {
                             },
                         },
                     }}
-                    slots={{toolbar: GridToolbar}}
                     slotProps={{
                         toolbar: {
                             showQuickFilter: true,

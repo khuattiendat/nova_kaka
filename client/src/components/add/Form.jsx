@@ -12,7 +12,8 @@ import {useSelector} from "react-redux";
 
 const Form = (props) => {
     const {isEdit, type, columns, _data} = props;
-    const user = useSelector(state => state.user)
+    // const user = useSelector(state => state.user)
+    const user = JSON.parse(sessionStorage.getItem('user'))
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     console.log(_data)

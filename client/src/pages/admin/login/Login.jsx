@@ -36,6 +36,7 @@ const Login = () => {
             toast.success('Đăng nhập thành công', {
                 autoClose: 1000,
             })
+            sessionStorage.setItem('user', JSON.stringify(res.data))
             dispatch(setUser(res.data))
             navigate('/admin')
             setLoading(false)

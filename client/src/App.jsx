@@ -9,7 +9,7 @@ import HomeClient from "./pages/client/HomeCLient/HomeClient.jsx";
 import List from "./pages/admin/list/List.jsx";
 import React from "react";
 import RatingAll from "./pages/client/Rating/RatingAll/Rating.jsx";
-import YourTest from "./pages/client/YourTest/YourTest.jsx";
+import Test from "./pages/client/Test/Test.jsx";
 import Wait from "./pages/client/wait/Wait.jsx";
 import ListExam from "./pages/client/listExam/ListExam.jsx";
 import Exam from "./pages/client/exam/Exam.jsx";
@@ -32,7 +32,8 @@ function App() {
                 {path: "/admin/exam/sua/:id", element: <NewUser type='exam' isEdit={true}/>},
                 {path: "/admin/question/danh-sach", element: <List type='question'/>},
                 {path: "/admin/question/them-moi", element: <NewUser type='question'/>},
-                {path: "/admin/question/sua/:id", element: <NewUser type='question' isEdit={true}/>}
+                {path: "/admin/question/sua/:id", element: <NewUser type='question' isEdit={true}/>},
+                {path: "/admin/data/:id", element: <List type='data'/>},
             ],
         },
         {
@@ -44,7 +45,7 @@ function App() {
                 {path: '/phong-cho/:id', element: <Wait/>},
                 {path: '/bang-xep-hang-all/:id', element: <RatingAll/>},
                 {path: '/thi/:id', element: <Exam/>},
-                {path: '/bai-thi-cua-ban', element: <YourTest/>}
+                {path: '/bai-thi-cua-ban', element: <Test/>}
             ]
         },
         {path: "/login", element: <HomeClient/>},

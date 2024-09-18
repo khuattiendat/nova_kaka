@@ -1,8 +1,5 @@
-import {configureStore} from '@reduxjs/toolkit'
-import {setupListeners} from '@reduxjs/toolkit/query'
-import {combineReducers} from '@reduxjs/toolkit'
-import storage from 'redux-persist/lib/storage'
-import userReducer from './userSlice'
+import {configureStore, combineReducers} from "@reduxjs/toolkit";
+import userReducer from "./userSlice";
 import {
     persistStore,
     persistReducer,
@@ -12,25 +9,26 @@ import {
     PERSIST,
     PURGE,
     REGISTER,
-} from 'redux-persist'
-import autoMergeLevel2 from "redux-persist/es/stateReconciler/autoMergeLevel2";
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 const persistConfig = {
-    key: 'root',
-    storage: storage,
+    key: "root",
     version: 1,
-    autoMergeLevel2: autoMergeLevel2,
-}
-const rootReducers = combineReducers({
-    user: userReducer,
-})
-const persistedReducer = persistReducer(persistConfig, rootReducers)
-const store = configureStore({
+    storage,
+    whitelist: ["user"],
+};
+const rootReducer = combineReducers({
+    user: userReducer
+});
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
-            serializableCheck: false,
+            serializableCheck: false
         }),
 })
-setupListeners(store.dispatch)
-export default store
+
+export let persistor = persistStore(store);

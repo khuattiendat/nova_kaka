@@ -13,7 +13,8 @@ import {useSelector} from "react-redux";
 
 const NewUser = ({type, isEdit}) => {
     const params = useParams();
-    const user = useSelector(state => state.user)
+    // const user = useSelector(state => state.user)
+    const user = JSON.parse(sessionStorage.getItem('user'))
     const navigate = useNavigate();
     const {id} = params;
     const [data, setData] = useState({})

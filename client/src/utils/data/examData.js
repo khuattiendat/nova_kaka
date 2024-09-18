@@ -81,3 +81,17 @@ export const examColumns = [
         type: "string",
     }
 ];
+export const dataColumns = [
+    {
+        field: "name",
+        type: "string",
+        headerName: "Tên",
+        width: 350,
+    },
+    {
+        field: "phone",
+        type: "string",
+        headerName: "Số điện thoại",
+        width: 200,
+    },
+]
